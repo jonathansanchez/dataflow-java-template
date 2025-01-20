@@ -20,7 +20,9 @@ import org.apache.beam.sdk.values.TypeDescriptor;
 import java.util.Arrays;
 
 public class DataPipeline {
+
     JobOptions options;
+
     public DataPipeline(String[] args) {
 
         PipelineOptionsFactory.register(JobOptions.class);
@@ -37,9 +39,9 @@ public class DataPipeline {
         Pipeline pipeline = Pipeline.create(options);
 
 
-        PCollection<String> extractedData = pipeline.apply("Read Data GCS", TextIO.read().from(options.getInput()));
+        PCollection<String> extractedData = pipeline.apply("Extract: Get Data from Data Lake", TextIO.read().from(options.getInput()));
 
-        PCollection<String> transformFile = extractedData.apply("Reverse Columns", ParDo.of(new ReverseColumnsFn()));
+        PCollection<String> transformFile = extractedData.apply("Transform: Order data", ParDo.of(new ReverseColumnsFn()));
 
         writeBigQuery(transformFile);
 
@@ -53,7 +55,7 @@ public class DataPipeline {
     }
 
     private void writeBigQuery(PCollection<String> lines){
-        String name = "Write Data Big Query";
+        String name = "Transform: Convert data in Row";
 
         // Declare bigquery schema
         var schema = Schema.builder()
@@ -80,7 +82,7 @@ public class DataPipeline {
                 .setRowSchema(schema)
 
                 //Convertir a tipo de dato TableRow de BQ
-                .apply("Convert to BigQuery TableRow", MapElements.into(TypeDescriptor.of(TableRow.class))
+                .apply("Transform: Convert data in TableRow", MapElements.into(TypeDescriptor.of(TableRow.class))
                         .via(row -> {
                             System.out.println("Row: " + row);
                             assert row != null;
@@ -92,7 +94,7 @@ public class DataPipeline {
                                     .set("software_type", row.getString("software_type"))
                                     .set("software_name", row.getString("software_name"));
                         }))
-                .apply("Write to BigQuery", BigQueryIO.writeTableRows()
+                .apply("Load: Write data to BigQuery", BigQueryIO.writeTableRows()
                         .to(options.getOutputTable())
                         .withSchema(new TableSchema().setFields(Arrays.asList(
                                 new TableFieldSchema().setName("unique_component_id").setType("STRING"),
