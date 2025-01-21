@@ -1,4 +1,4 @@
-package com.verix.example;
+package com.verix.sam.infrastructure.config;
 
 import org.apache.beam.sdk.options.Description;
 import org.apache.beam.sdk.options.PipelineOptions;
