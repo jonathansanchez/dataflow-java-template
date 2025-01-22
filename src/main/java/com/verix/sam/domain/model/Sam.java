@@ -6,6 +6,7 @@ public class Sam {
     private final String publisher;
     private final String category;
     private final String product;
+    private final String productVersion;
     private final String version;
     private final String fullVersion;
     private final String edition;
@@ -20,10 +21,11 @@ public class Sam {
     private SimpleDateFormat eol;
     private String source;
 
-    public Sam(String publisher, String category, String product, String version, String fullVersion, String edition, SimpleDateFormat internalAvailability, SimpleDateFormat internalEOS, SimpleDateFormat publisherAvailability, SimpleDateFormat eos, SimpleDateFormat eoes, SimpleDateFormat eol, String source) {
+    public Sam(String publisher, String category, String product, String productVersion, String version, String fullVersion, String edition, SimpleDateFormat internalAvailability, SimpleDateFormat internalEOS, SimpleDateFormat publisherAvailability, SimpleDateFormat eos, SimpleDateFormat eoes, SimpleDateFormat eol, String source) {
         this.publisher = publisher;
         this.category = category;
         this.product = product;
+        this.productVersion = productVersion;
         this.version = version;
         this.fullVersion = fullVersion;
         this.edition = edition;
@@ -46,6 +48,10 @@ public class Sam {
 
     public String getProduct() {
         return product;
+    }
+
+    public String getProductVersion() {
+        return productVersion;
     }
 
     public String getVersion() {

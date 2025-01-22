@@ -1,7 +1,7 @@
 package com.verix.sam.domain.model;
 
-import org.apache.beam.sdk.values.PCollection;
+import java.util.List;
 
 public interface WriterRepository {
-    void save(PCollection<String> samListString);
+    void save(List<Sam> samList);
 }

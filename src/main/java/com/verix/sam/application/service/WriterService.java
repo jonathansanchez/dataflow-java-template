@@ -1,7 +1,9 @@
 package com.verix.sam.application.service;
 
+import com.verix.sam.domain.model.Sam;
 import com.verix.sam.domain.model.WriterRepository;
-import org.apache.beam.sdk.values.PCollection;
+
+import java.util.List;
 
 public class WriterService {
     private final WriterRepository repository;
@@ -10,7 +12,7 @@ public class WriterService {
         this.repository = repository;
     }
 
-    public void execute(PCollection<String> samListString) {
-        repository.save(samListString);
+    public void execute(List<Sam> samList) {
+        repository.save(samList);
     }
 }
