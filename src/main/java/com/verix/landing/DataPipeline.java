@@ -4,6 +4,7 @@ import com.google.api.services.bigquery.model.TableFieldSchema;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
 import com.verix.landing.domain.model.Landing;
+import com.verix.landing.infrastructure.config.JobOptions;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.PipelineResult;
 import org.apache.beam.sdk.coders.SerializableCoder;
@@ -18,6 +19,7 @@ import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.values.PCollection;
 import org.apache.beam.sdk.values.Row;
 import org.apache.beam.sdk.values.TypeDescriptor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -47,12 +49,8 @@ public class DataPipeline {
 
         //writeBigQuery(extractedData);
 
-        PCollection<Landing> convertLanding = extractedData.apply("Convertir en clase Landing", MapElements.into(TypeDescriptor.of(Landing.class))
-                .via(line -> {
-                    String[] splitValue = line.toString().split(",");
-                    return new Landing(splitValue[0], splitValue[1], splitValue[2], splitValue[3], splitValue[4], splitValue[5]);
-                }))
-                .setCoder(SerializableCoder.of(Landing.class));
+        //PCollection<Landing> convertLanding = extractedData.apply("Convertir en clase Landing", getVia());
+        PCollection<Landing> convertLanding = extractedData.apply("Convertir Landing", ParDo.of(new ConvertLanding()));
 
         convertLanding.apply("Print Landing", ParDo.of(new LandingMapper()));
 
@@ -63,6 +61,15 @@ public class DataPipeline {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @NotNull
+    private static MapElements<String, Landing> getVia() {
+        return MapElements.into(TypeDescriptor.of(Landing.class))
+                .via(line -> {
+                    String[] splitValue = line.toString().split(",");
+                    return new Landing(splitValue[0], splitValue[1], splitValue[2], splitValue[3], splitValue[4], splitValue[5]);
+                });
     }
 
     private void writeBigQuery(PCollection<String> lines){
@@ -127,6 +134,14 @@ public class DataPipeline {
                 columns[i] = new StringBuilder(columns[i]).reverse().toString();
             }
             out.output(String.join(",", columns));
+        }
+    }
+
+    static class ConvertLanding extends DoFn<String, Landing>{
+        @ProcessElement
+        public void processElement(@Element String line, OutputReceiver<Landing> out) {
+            String[] splitValue = line.toString().split(",");
+            out.output(new Landing(splitValue[0], splitValue[1], splitValue[2], splitValue[3], splitValue[4], splitValue[5]));
         }
     }
 

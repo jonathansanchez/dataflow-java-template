@@ -18,7 +18,6 @@ public class Landing implements Serializable {
         this.vendor = vendor;
         this.softwareType = softwareType;
         this.softwareName = softwareName;
-        throw new RuntimeException("Not implemented yet");
     }
 
     public String getUniqueComponentId() {

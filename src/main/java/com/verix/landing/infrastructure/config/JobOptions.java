@@ -1,4 +1,4 @@
-package com.verix.landing;
+package com.verix.landing.infrastructure.config;
 
 import org.apache.beam.sdk.options.Description;
 import org.apache.beam.sdk.options.PipelineOptions;
