@@ -1,10 +1,12 @@
-package com.verix.example;
+package com.verix.landing;
 
 import com.google.api.services.bigquery.model.TableFieldSchema;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
+import com.verix.landing.domain.model.Landing;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.PipelineResult;
+import org.apache.beam.sdk.coders.SerializableCoder;
 import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
@@ -31,7 +33,7 @@ public class DataPipeline {
                 .withValidation()
                 .as(JobOptions.class);
 
-        options.setInput("gs://bucket-swc-test/Sources/Landing/20250110/minilanding.csv");
+        options.setInput("gs://bucket-swc-test/landing/data/minilanding.csv");
         options.setOutput("../Datos/modified_minilandingGCS");
         options.setOutputTable("dataset_swc_test.landing");
         options.setTempBucket("gs://bucket-swc-test/temp-files/landing");
@@ -39,11 +41,20 @@ public class DataPipeline {
         Pipeline pipeline = Pipeline.create(options);
 
 
-        PCollection<String> extractedData = pipeline.apply("Extract: Get Data from Data Lake", TextIO.read().from(options.getInput()));
+        PCollection<String> extractedData = pipeline.apply("Extract: Get Data from Data Lake", TextIO.read().withSkipHeaderLines(1).from(options.getInput()));
 
-        PCollection<String> transformFile = extractedData.apply("Transform: Order data", ParDo.of(new ReverseColumnsFn()));
+        //PCollection<String> transformFile = extractedData.apply("Transform: Order data", ParDo.of(new ReverseColumnsFn()));
 
-        writeBigQuery(transformFile);
+        //writeBigQuery(extractedData);
+
+        PCollection<Landing> convertLanding = extractedData.apply("Convertir en clase Landing", MapElements.into(TypeDescriptor.of(Landing.class))
+                .via(line -> {
+                    String[] splitValue = line.toString().split(",");
+                    return new Landing(splitValue[0], splitValue[1], splitValue[2], splitValue[3], splitValue[4], splitValue[5]);
+                }))
+                .setCoder(SerializableCoder.of(Landing.class));
+
+        convertLanding.apply("Print Landing", ParDo.of(new LandingMapper()));
 
         PipelineResult result = pipeline.run();
         try {
@@ -68,10 +79,10 @@ public class DataPipeline {
                 .build();
 
         // Transformar lineas a columnas
+
         lines.apply(name, MapElements.into(TypeDescriptor.of(Row.class))
-                        .via(col -> {
-                            System.out.println("Columna: " + col);
-                            String[] splitCol = col.toString().split(",");
+                        .via(line -> {
+                            String[] splitCol = line.toString().split(",");
                             Row.Builder row = Row.withSchema(schema);
                             for(String value : splitCol){
                                 row.addValue(value);
@@ -105,7 +116,7 @@ public class DataPipeline {
                                 new TableFieldSchema().setName("software_name").setType("STRING"))))
                         .withCustomGcsTempLocation(ValueProvider.StaticValueProvider.of(options.getTempBucket()))
                         .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
-                        .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND));
+                        .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE));
     }
 
     static class ReverseColumnsFn extends DoFn<String, String> {
@@ -117,5 +128,14 @@ public class DataPipeline {
             }
             out.output(String.join(",", columns));
         }
+    }
+
+    static class LandingMapper extends DoFn<Landing, Landing> {
+        @ProcessElement
+        public void processElement(@Element Landing l, OutputReceiver<Landing> out) {
+            System.out.println("Landing Object: " + l.getUniqueComponentId() + ", " + l.getApmCode() + ", " + l.getAppName() + ", " + l.getVendor() + ", " + l.getSoftwareType() + ", " + l.getSoftwareName());
+            out.output(l);
+        }
+
     }
 }
