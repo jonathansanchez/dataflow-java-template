@@ -8,8 +8,6 @@ import com.verix.sam.infrastructure.repository.model.SamTableSchema;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
 import org.apache.beam.sdk.transforms.SerializableFunction;
 
-import java.util.List;
-
 public final class BigQueryWriterRepository implements WriterRepository {
 
     private final JobOptions options;
@@ -21,7 +19,7 @@ public final class BigQueryWriterRepository implements WriterRepository {
     }
 
     @Override
-    public void save(List<Sam> samList) {
+    public void save(Sam sam) {
         BigQueryIO.<Sam>write()
                 .to(options.getOutputTable())
                 .withFormatFunction(getSamTableRowSerializableFunction())
