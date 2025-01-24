@@ -55,7 +55,7 @@ public final class DIContainer {
         container.register("writer_service", new WriterService(container.resolve("big_query_repository")));
         container.register("remove_line_breaks_transformation", new RemoveLineBreaksTransformation());
         container.register("string_to_sam_transformation", new StringToSamTransformation());
-        container.register("apache_beam_pipeline", new ApacheBeamDataPipeline(container.resolve("pipeline"), container.resolve("writer_service"), container.resolve("remove_line_breaks_transformation"), container.resolve("string_to_sam_transformation")));
+        container.register("apache_beam_pipeline", new ApacheBeamDataPipeline(container.resolve("job_options"), container.resolve("pipeline"), container.resolve("writer_service"), container.resolve("remove_line_breaks_transformation"), container.resolve("string_to_sam_transformation")));
         container.register("streaming_service", new StreamingService(container.resolve("apache_beam_pipeline")));
 
         //Init

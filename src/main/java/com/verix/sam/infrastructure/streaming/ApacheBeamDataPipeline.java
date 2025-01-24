@@ -18,9 +18,14 @@ public class ApacheBeamDataPipeline implements DataPipeline {
     private final WriterService writerService;
     private final RemoveLineBreaksTransformation removeLineBreaksTransformation;
     private final StringToSamTransformation stringToSamTransformation;
-    JobOptions options;
+    private final JobOptions options;
 
-    public ApacheBeamDataPipeline(Pipeline pipeline, WriterService writerService, RemoveLineBreaksTransformation removeLineBreaksTransformation, StringToSamTransformation stringToSamTransformation) {
+    public ApacheBeamDataPipeline(JobOptions options,
+                                  Pipeline pipeline,
+                                  WriterService writerService,
+                                  RemoveLineBreaksTransformation removeLineBreaksTransformation,
+                                  StringToSamTransformation stringToSamTransformation) {
+        this.options = options;
         this.pipeline = pipeline;
         this.writerService = writerService;
         this.removeLineBreaksTransformation = removeLineBreaksTransformation;
@@ -30,9 +35,7 @@ public class ApacheBeamDataPipeline implements DataPipeline {
     @Override
     public void run() {
         try {
-            TextIO.Read from = getRead();
-
-            PCollection<String> rawData = pipeline.apply("Extract: Read CSV File", from);
+            PCollection<String> rawData = pipeline.apply("Extract: Read CSV File", TextIO.read().withSkipHeaderLines(1).from(options.getInput()));
 
             PCollection<String> cleanedLines = rawData.apply("Transform: Sanitization line breaks", ParDo.of(removeLineBreaksTransformation));
 
@@ -46,9 +49,5 @@ public class ApacheBeamDataPipeline implements DataPipeline {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private TextIO.Read getRead() {
-        return TextIO.read().withSkipHeaderLines(1).from(options.getInput());
     }
 }
