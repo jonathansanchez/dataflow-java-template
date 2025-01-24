@@ -2,17 +2,18 @@ package com.verix.sam.application.service;
 
 import com.verix.sam.domain.model.Sam;
 import com.verix.sam.domain.model.WriterRepository;
+import org.apache.beam.sdk.transforms.DoFn;
 
-import java.util.List;
-
-public class WriterService {
+public class WriterService extends DoFn<Sam, Sam> {
     private final WriterRepository repository;
 
     public WriterService(WriterRepository repository) {
         this.repository = repository;
     }
 
-    public void execute(List<Sam> samList) {
-        repository.save(samList);
+    @ProcessElement
+    public void execute(@Element Sam sam, OutputReceiver<Sam> out) {
+        repository.save(sam);
+        out.output(sam);
     }
 }
