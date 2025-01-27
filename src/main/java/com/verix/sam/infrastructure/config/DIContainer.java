@@ -40,11 +40,6 @@ public final class DIContainer {
                 .withValidation()
                 .as(JobOptions.class);
 
-        options.setInput("gs://bucket-swc-test/Sources/Landing/20250110/minilanding.csv");
-        options.setOutput("../Datos/modified_minilandingGCS");
-        options.setOutputTable("dataset_swc_test.sam");
-        options.setTempBucket("gs://bucket-swc-test/temp-files/sam");
-
         container.register("job_options", options);
         container.register("cloud_storage_repository", new CloudStorageRepository(container.resolve("job_options")));
         container.register("table_schema", new TableSchema());

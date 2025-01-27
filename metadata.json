@@ -1,5 +1,27 @@
 {
   "name": "Java flex template",
   "description": "An example flex template for Java 17.",
-  "parameters": []
+  "parameters": [
+    {
+      "name": "input",
+      "label": "Input DataLake Path",
+      "helpText": "GCS path to the input data",
+      "defaultValue": "gs://[BUCKET_NAME]/sam/data/20250127/sam.csv",
+      "paramType": "TEXT"
+    },
+    {
+      "name": "output",
+      "label": "BigQuery Dataset",
+      "helpText": "Dataset name from BigQuery",
+      "defaultValue": "[DATASET.TABLE_NAME]",
+      "paramType": "TEXT"
+    },
+    {
+      "name": "temp",
+      "label": "Temporal data",
+      "helpText": "GCS path to the temporal data",
+      "defaultValue": "gs://[BUCKET_NAME]/sam/data/temp-files",
+      "paramType": "TEXT"
+    }
+  ]
 }

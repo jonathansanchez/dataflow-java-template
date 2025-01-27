@@ -12,11 +12,7 @@ public interface JobOptions extends PipelineOptions {
     String getOutput();
     void setOutput(String output);
 
-    @Description("Output Table BigQuery")
-    String getOutputTable();
-    void setOutputTable(String outputTable);
-
     @Description("Temp bucket location")
-    String getTempBucket();
-    void setTempBucket(String tempBucket);
+    String getTemp();
+    void setTemp(String temp);
 }
