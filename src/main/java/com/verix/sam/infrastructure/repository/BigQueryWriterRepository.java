@@ -21,7 +21,7 @@ public final class BigQueryWriterRepository implements WriterRepository {
     @Override
     public void save(Sam sam) {
         BigQueryIO.<Sam>write()
-                .to(options.getOutputTable())
+                .to(options.getOutput())
                 .withFormatFunction(getSamTableRowSerializableFunction())
                 .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
                 .withSchema(schema.create())
