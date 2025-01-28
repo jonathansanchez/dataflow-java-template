@@ -37,12 +37,12 @@ public final class BigQueryWriterRepository implements WriterRepository {
                 .set("version", sam.getVersion())
                 .set("full_version", sam.getFullVersion())
                 .set("edition", sam.getEdition())
-                .set("internal_availability", sam.getInternalAvailability())
-                .set("internal_end_of_support", sam.getInternalEOS())
-                .set("publisher_availability", sam.getPublisherAvailability())
-                .set("publisher_end_of_support", sam.getEos())
-                .set("publisher_end_of_extended_support", sam.getEoes())
-                .set("publisher_end_of_life", sam.getEol())
+                .set("internal_availability", sam.getInternalAvailability().getValue())
+                .set("internal_end_of_support", sam.getInternalEOS().getValue())
+                .set("publisher_availability", sam.getPublisherAvailability().getValue())
+                .set("publisher_end_of_support", sam.getEos().getValue())
+                .set("publisher_end_of_extended_support", sam.getEoes().getValue())
+                .set("publisher_end_of_life", sam.getEol().getValue())
                 .set("source", sam.getEol());
     }
 }
