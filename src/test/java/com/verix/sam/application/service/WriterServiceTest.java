@@ -3,6 +3,7 @@ package com.verix.sam.application.service;
 import com.verix.sam.domain.model.Sam;
 import com.verix.sam.domain.model.SamStub;
 import com.verix.sam.domain.model.WriterRepository;
+import com.verix.sam.domain.model.exception.SamWriterException;
 import org.apache.beam.sdk.transforms.DoFn.OutputReceiver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,14 +45,13 @@ class WriterServiceTest {
         Sam sam                 = SamStub.create();
         OutputReceiver<Sam> out = mock(OutputReceiver.class);
 
-        assertThrows(RuntimeException.class, () -> doThrow().when(repository).save(eq(sam)));
+        doThrow(new RuntimeException()).when(repository).save(eq(sam));
 
-        //Act
-        service.execute(sam, out);
+        //Act and Assert
+        assertThrows(SamWriterException.class, () -> service.execute(sam, out));
 
-        //Assert
         verify(repository, times(1)).save(eq(sam));
-        verify(out, times(1)).output(eq(sam));
+        verify(out, times(0)).output(eq(sam));
     }
 
 }
