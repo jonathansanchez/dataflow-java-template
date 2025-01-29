@@ -1,4 +1,4 @@
-package com.verix.example;
+package com.verix.apm;
 
 public class Application {
 

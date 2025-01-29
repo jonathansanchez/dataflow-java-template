@@ -1,43 +1,29 @@
-package com.verix.example;
+package com.verix.apm;
 
 import com.google.api.services.bigquery.model.TableFieldSchema;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.PipelineResult;
-import org.apache.beam.sdk.io.FileIO;
 import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.options.ValueProvider;
 import org.apache.beam.sdk.transforms.DoFn;
-import org.apache.beam.sdk.transforms.Filter;
-import org.apache.beam.sdk.transforms.MapElements;
 import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.values.PCollection;
-import org.apache.beam.sdk.values.TypeDescriptor;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
-
-
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PipelineApm {
+public class Prueba {
 
     private JobOptions options;
 
-    public PipelineApm(String[] args) {
+    public Prueba(String[] args) {
         initializePipelineOptions(args);//extrae los valores
         executePipeline();
     }
@@ -65,6 +51,10 @@ public class PipelineApm {
         // Paso 1: Leer el archivo CSV
         PCollection<String> rawData = readCsvFile(pipeline);
 
+        // Paso 2: Escribir datos de depuración en un archivo
+        String debugOutputPath = options.getOutput() + "/debug/rawData";
+        writeDebugData(rawData, debugOutputPath);
+
         // Paso 2: Transformar a TableRow
         PCollection<TableRow> tableRows = transformToTableRows(rawData);
 
@@ -86,6 +76,13 @@ public class PipelineApm {
         return pipeline.apply("Extract:Read CSV File", TextIO.read().withSkipHeaderLines(1).from(options.getInput()));
     }
 
+    private void writeDebugData(PCollection<String> data, String debugOutputPath) {
+        data.apply("Write Debug Data", TextIO.write()
+                .to(debugOutputPath)
+                .withSuffix(".txt")
+                .withoutSharding()); // Escribe todos los datos en un solo archivo
+    }
+
     /**
      * Transforma las líneas del CSV en objetos TableRow para BigQuery.
      */
@@ -94,19 +91,26 @@ public class PipelineApm {
                 ParDo.of(new ConvertToTableRowFn()));
     }
 
+
+
+    /**
+     * Convierte una fecha en formato dd-MM-yy a yyyy-MM-dd.
+     */
     private static String convertDate(String dateStr) {
         try {
+            // Verificar si la fecha está vacía o es nula
             if (dateStr == null || dateStr.trim().isEmpty()) {
                 return null;
             }
 
-            // Formato de entrada: dd-MMM-yyyy (10-Dec-2011)
+            // Formato de entrada: dd-MMM-yyyy (ej. 10-Dec-2011)
             SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
-            inputFormat.setLenient(false); // Formato estricto
+            inputFormat.setLenient(false); // Formato estricto, para evitar errores
 
             // Formato de salida: yyyy-MM-dd (2025-06-30)
             SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+            // Parsear fecha
             Date date = inputFormat.parse(dateStr);
             return outputFormat.format(date);
 
@@ -119,6 +123,9 @@ public class PipelineApm {
         }
     }
 
+    /**
+     * Escribe los datos en una tabla de BigQuery.
+     */
     private void writeToBigQuery(PCollection<TableRow> tableRows) {
         tableRows.apply("Write to BigQuery", BigQueryIO.writeTableRows()
                 .to(options.getOutputTable())
@@ -128,6 +135,9 @@ public class PipelineApm {
                 .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE));
     }
 
+    /**
+     * Ejecuta el pipeline y espera a que termine.
+     */
     private void runPipeline(Pipeline pipeline) {
         PipelineResult result = pipeline.run();
         try {
@@ -137,6 +147,9 @@ public class PipelineApm {
         }
     }
 
+    /**
+     * Devuelve el esquema de la tabla de BigQuery.
+     */
     private static TableSchema getBigQuerySchema() {
         return new TableSchema().setFields(Arrays.asList(
                 new TableFieldSchema().setName("apm_code").setType("STRING").setMode("REQUIRED"),
@@ -164,6 +177,7 @@ public class PipelineApm {
             String line = context.element();
             String[] columns = parseCsvLine(line);
 
+            // Verificar si la cantidad de columnas es suficiente antes de acceder a los índices
             if (columns.length >= 15) {
                 TableRow row = new TableRow()
                         .set("apm_code", columns[0])
@@ -183,34 +197,64 @@ public class PipelineApm {
                         .set("iso", columns[14]);
                 context.output(row);
             } else {
+                // Si no tiene suficientes columnas, imprimir el error y continuar con la siguiente fila
                 System.out.println("Row does not have enough columns: " + Arrays.toString(columns));
             }
         }
     }
 
+/*    private static String[] parseCsvLine(String line) {
+        List<String> columns = new ArrayList<>();
+        Matcher matcher = Pattern.compile("\"([^\"]*)\"|([^,]+)").matcher(line); //"[^a-zA-Z0-9\\s.-:/]" // "\"([^\"]*)\"|([^,]+)"
+
+        while (matcher.find()) {
+            String value = matcher.group(1) != null ? matcher.group(1) : matcher.group(2);
+            columns.add(value.trim());
+        }
+
+        return columns.toArray(new String[0]);
+    }*/
+
     private static String[] parseCsvLine(String line) {
         List<String> columns = new ArrayList<>();
-        Matcher matcher = Pattern.compile("\"([^\"]*)\"|([^,]+)").matcher(line);
+        Matcher matcher = Pattern.compile("\"([^\"]*)\"|([^,]+)").matcher(line); // Regex para encontrar comillas o comas "\"([^\"]*)\"|([^,]+)"
 
 
         while (matcher.find()) {
             // Extraer el valor de la columna
             String value = matcher.group(1) != null ? matcher.group(1) : matcher.group(2);
 
+            //value = value.trim().isEmpty()?null:value;
             if (value.equals("BJRC")){
                 value=value;
             }
 
+            // Si la columna está vacía, agregar null en su lugar
             if (value.trim().isEmpty()) {
-                columns.add(null);
+                columns.add(null); // Agregar null en lugar de una cadena vacía
             } else {
                 columns.add(value.trim());
             }
         }
 
+        // Convertir la lista a un arreglo y devolverlo
         return columns.toArray(new String[0]);
     }
 
+
+    /**
+     * Elimina espacios en blanco de un .csv y divide en un array de Strings
+     * Devuelve un array de Strings (String[]), donde cada elemento representa una columna separada por comas.
+     */
+/*    private static String[] parseCsvLine(String line) {
+        return Arrays.stream(line.split(","))
+                .map(String::trim) // Elimina espacios extra
+                .toArray(String[]::new);
+    }*/
+
+    /**
+     * Convierte un String a un Boolean. (revisar)
+     */
     private static Boolean parseBoolean(String value) {
         if (value == null || value.trim().isEmpty()) {
             return null;

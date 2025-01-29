@@ -1,4 +1,4 @@
-package com.verix.example;
+package com.verix.apm;
 
 /*import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;*/

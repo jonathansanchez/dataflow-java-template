@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.bns.verix</groupId>
+  <groupId>com.verix</groupId>
   <artifactId>example</artifactId>
   <name>example</name>
   <version>0.0.1-SNAPSHOT</version>
   <description>DataFlow Java 17 Skeleton with Spring Boot</description>
-  <developers>
-    <developer />
-  </developers>
-  <licenses>
-    <license />
-  </licenses>
-  <scm />
   <build>
     <plugins>
       <plugin>
@@ -53,52 +46,11 @@
       </plugin>
     </plugins>
   </build>
-  <profiles>
-    <profile>
-      <id>dataflow-runner</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.apache.beam</groupId>
-          <artifactId>beam-runners-google-cloud-dataflow-java</artifactId>
-          <version>${beam.version}</version>
-        </dependency>
-      </dependencies>
-    </profile>
-  </profiles>
-  <dependencies>
-    <dependency>
-      <groupId>com.google.cloud</groupId>
-      <artifactId>google-cloud-dataflow</artifactId>
-      <version>0.37.0</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>proto-google-cloud-dataflow-v1beta3</artifactId>
-          <groupId>com.google.api.grpc</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>com.google.cloud</groupId>
-      <artifactId>google-cloud-artifact-registry</artifactId>
-      <version>1.32.0</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>proto-google-cloud-artifact-registry-v1</artifactId>
-          <groupId>com.google.api.grpc</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>proto-google-cloud-artifact-registry-v1beta2</artifactId>
-          <groupId>com.google.api.grpc</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-  </dependencies>
   <properties>
     <java.version>17</java.version>
-    <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
+    <maven-exec-plugin.version>1.6.0</maven-exec-plugin.version>
     <beam.version>2.54.0</beam.version>
+    <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
   </properties>
