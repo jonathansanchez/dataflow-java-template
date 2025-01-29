@@ -24,6 +24,7 @@ public final class BigQueryWriterRepository implements WriterRepository {
                 .to(options.getOutput())
                 .withFormatFunction(getSamTableRowSerializableFunction())
                 .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
+                .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE)
                 .withSchema(schema.create())
                 .withMethod(BigQueryIO.Write.Method.STORAGE_WRITE_API);
     }
