@@ -1,7 +1,6 @@
 package com.verix.sam.domain.model;
 
 import org.junit.jupiter.api.Test;
-
 import java.time.format.DateTimeParseException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,7 +15,7 @@ class LifeDateTest {
         //Act
         LifeDate date = LifeDate.create(value);
 
-        //Arrange
+        //Assert
         assertNotNull(date.getValue());
         assertNotEquals("", date.getValue());
         assertEquals(expectedDate, date.getValue());
@@ -30,7 +29,7 @@ class LifeDateTest {
         //Act
         LifeDate date = LifeDate.create(value);
 
-        //Arrange
+        //Assert
         assertNotNull(date.getValue());
         assertEquals("", date.getValue());
     }
@@ -43,7 +42,7 @@ class LifeDateTest {
         //Act
         LifeDate date = LifeDate.create(value);
 
-        //Arrange
+        //Assert
         assertNotNull(date.getValue());
         assertEquals("", date.getValue());
     }
@@ -56,7 +55,7 @@ class LifeDateTest {
         //Act
         LifeDate date = LifeDate.create(value);
 
-        //Arrange
+        //Assert
         assertNotNull(date.getValue());
         assertEquals("", date.getValue());
     }
