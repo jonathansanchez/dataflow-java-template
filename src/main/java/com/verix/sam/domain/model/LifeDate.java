@@ -31,6 +31,7 @@ public class LifeDate {
                                 .trim()
                                 .replaceAll(REGEX_SPECIAL_CHARS, EMPTY_STRING)
                 )
+                .filter(Predicate.not(String::isEmpty))
                 .map(s -> {
                     LocalDate date = LocalDate.parse(s, INPUT_FORMAT);
                     return date.format(OUTPUT_FORMAT);
