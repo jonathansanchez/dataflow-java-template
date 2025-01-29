@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class Sam {
-    private static final String REGEX_SPECIAL_CHARS = "[^a-zA-Z0-9\\s.,-@#$/]";
+    private static final String REGEX_SPECIAL_CHARS = "[^a-zA-Z0-9\\s._,-@#$/]";
     private static final String REPLACEMENT = "";
 
     private final String publisher;
@@ -130,11 +130,18 @@ public class Sam {
     }
 
     private String removeSpecialCharsForRequired(String value) {
-        return Optional
+        String optionalValue = Optional
                 .ofNullable(value)
+                .filter(Predicate.not(String::isEmpty))
                 .orElseThrow(InvalidPropertyException::thrown)
                 .trim()
                 .replaceAll(REGEX_SPECIAL_CHARS, REPLACEMENT);
+
+        if (optionalValue.isEmpty()) {
+            throw InvalidPropertyException.thrown();
+        }
+
+        return optionalValue;
     }
 
     private String removeSpecialCharsForOptional(String value) {
@@ -145,6 +152,7 @@ public class Sam {
                         s
                                 .trim()
                                 .replaceAll(REGEX_SPECIAL_CHARS, REPLACEMENT))
+                .filter(Predicate.not(String::isEmpty))
                 .orElse(REPLACEMENT);
 
     }
