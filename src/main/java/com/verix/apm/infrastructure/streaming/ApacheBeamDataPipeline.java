@@ -5,7 +5,7 @@ import com.verix.apm.domain.model.DataPipeline;
 import com.verix.apm.domain.model.Apm;
 import com.verix.apm.infrastructure.config.JobOptions;
 import com.verix.apm.infrastructure.streaming.transformation.RemoveLineBreaksTransformation;
-import com.verix.apm.infrastructure.streaming.transformation.StringToSamTransformation;
+import com.verix.apm.infrastructure.streaming.transformation.StringToApmTransformation;
 
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.PipelineResult;
@@ -15,22 +15,22 @@ import org.apache.beam.sdk.values.PCollection;
 
 public class ApacheBeamDataPipeline implements DataPipeline {
 
-    private final Pipeline pipeline;
-    private final WriterService writerService;
-    private final RemoveLineBreaksTransformation removeLineBreaksTransformation;
-    private final StringToSamTransformation stringToSamTransformation;
+    private final Pipeline pipeline; // construye y ejecuta las transformaciones
+    private final WriterService writerService; //servicio responsable de escribir los datos
+    private final RemoveLineBreaksTransformation removeLineBreaksTransformation; //remueve saltos de linea
+    private final StringToApmTransformation stringToApmTransformation; //convierte String a objeto
     private final JobOptions options;
 
     public ApacheBeamDataPipeline(JobOptions options,
                                   Pipeline pipeline,
                                   WriterService writerService,
                                   RemoveLineBreaksTransformation removeLineBreaksTransformation,
-                                  StringToSamTransformation stringToSamTransformation) {
+                                  StringToApmTransformation stringToApmTransformation) {
         this.options = options;
         this.pipeline = pipeline;
         this.writerService = writerService;
         this.removeLineBreaksTransformation = removeLineBreaksTransformation;
-        this.stringToSamTransformation = stringToSamTransformation;
+        this.stringToApmTransformation = stringToApmTransformation;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class ApacheBeamDataPipeline implements DataPipeline {
 
             PCollection<String> cleanedLines = rawData.apply("Transform: Sanitization line breaks", ParDo.of(removeLineBreaksTransformation));
 
-            PCollection<Apm> apmList = cleanedLines.apply("Transform: Format from String to SAM Class and fields", ParDo.of(stringToSamTransformation));
+            PCollection<Apm> apmList = cleanedLines.apply("Transform: Format from String to APM Class and fields", ParDo.of(stringToApmTransformation));
 
             apmList.apply("Load: Write APM into BigQuery", ParDo.of(writerService));
 

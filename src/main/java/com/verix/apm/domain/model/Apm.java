@@ -22,13 +22,13 @@ public class Apm {
     public Apm(String apmCode, String apmName, Boolean isCompliant, Boolean cia, String lcState, LifeDate productionDate, LifeDate retirementDate, String dbrRating, Boolean applicationTested, String applicationContact, String manager, String vp, String svp, String portfolioOwner, String iso) {
         this.apmCode = StringCleaner.removeSpecialCharsForRequired(apmCode);
         this.apmName = StringCleaner.removeSpecialCharsForOptional(apmName);
-        this.isCompliant = isCompliant;
-        this.cia = cia;
+        this.isCompliant = BooleanCleaner.parseBoolean(String.valueOf(isCompliant));
+        this.cia = BooleanCleaner.parseBoolean(String.valueOf(cia));
         this.lcState = StringCleaner.removeSpecialCharsForOptional(lcState);
         this.productionDate = productionDate;
         this.retirementDate = retirementDate;
         this.dbrRating = StringCleaner.removeSpecialCharsForOptional(dbrRating);
-        this.applicationTested = applicationTested;
+        this.applicationTested = BooleanCleaner.parseBoolean(String.valueOf(applicationTested));
         this.applicationContact = StringCleaner.removeSpecialCharsForRequired(applicationContact);
         this.manager = StringCleaner.removeSpecialCharsForOptional(manager);
         this.vp = StringCleaner.removeSpecialCharsForRequired(vp);

@@ -39,7 +39,7 @@ public class PipelineApm {
                 .as(JobOptions.class);
 
         options.setInput(System.getenv("INPUT_PATH"));
-        options.setOutput(System.getenv("OUTPUT_PATH"));
+        //options.setOutput(System.getenv("OUTPUT_PATH"));
         options.setOutputTable(System.getenv("GCP_TABLE"));
         options.setTempBucket(System.getenv("TEMP_LOCATION"));
 
@@ -65,7 +65,7 @@ public class PipelineApm {
 
     private void printPipelineOptions() {
         System.out.println("Input: " + options.getInput());
-        System.out.println("Output: " + options.getOutput());
+        //System.out.println("Output: " + options.getOutput());
         System.out.println("OutputTable: " + options.getOutputTable());
         System.out.println("TempBucket: " + options.getTempBucket());
     }
