@@ -1,7 +1,5 @@
 package com.verix.apm.domain.model;
 
-import java.util.Date;
-
 //Atributos/Priopiedades
 public class Apm {
     private final String apmCode;
@@ -56,4 +54,5 @@ public class Apm {
     public String getSvp() { return svp; }
     public String getPortfolioOwner() { return portfolioOwner; }
     public String getIso() { return iso; }
+
 }
