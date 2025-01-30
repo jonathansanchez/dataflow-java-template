@@ -1,10 +1,12 @@
 package com.verix.sam.infrastructure.streaming;
 
-import com.verix.sam.application.service.WriterService;
+import com.google.api.services.bigquery.model.TableRow;
 import com.verix.sam.domain.model.DataPipeline;
 import com.verix.sam.domain.model.Sam;
 import com.verix.sam.infrastructure.config.JobOptions;
+import com.verix.sam.infrastructure.repository.BigQueryRepository;
 import com.verix.sam.infrastructure.streaming.transformation.RemoveLineBreaksTransformation;
+import com.verix.sam.infrastructure.streaming.transformation.SamToTableRow;
 import com.verix.sam.infrastructure.streaming.transformation.StringToSamTransformation;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.PipelineResult;
@@ -14,22 +16,25 @@ import org.apache.beam.sdk.values.PCollection;
 
 public class ApacheBeamDataPipeline implements DataPipeline {
 
+    private final JobOptions options;
     private final Pipeline pipeline;
-    private final WriterService writerService;
+    private final BigQueryRepository bigQueryRepository;
     private final RemoveLineBreaksTransformation removeLineBreaksTransformation;
     private final StringToSamTransformation stringToSamTransformation;
-    private final JobOptions options;
+    private final SamToTableRow samToTableRow;
 
     public ApacheBeamDataPipeline(JobOptions options,
                                   Pipeline pipeline,
-                                  WriterService writerService,
+                                  BigQueryRepository bigQueryRepository,
                                   RemoveLineBreaksTransformation removeLineBreaksTransformation,
-                                  StringToSamTransformation stringToSamTransformation) {
+                                  StringToSamTransformation stringToSamTransformation,
+                                  SamToTableRow samToTableRow) {
         this.options = options;
         this.pipeline = pipeline;
-        this.writerService = writerService;
+        this.bigQueryRepository = bigQueryRepository;
         this.removeLineBreaksTransformation = removeLineBreaksTransformation;
         this.stringToSamTransformation = stringToSamTransformation;
+        this.samToTableRow = samToTableRow;
     }
 
     @Override
@@ -41,7 +46,9 @@ public class ApacheBeamDataPipeline implements DataPipeline {
 
             PCollection<Sam> samList = cleanedLines.apply("Transform: Format from String to SAM Class and fields", ParDo.of(stringToSamTransformation));
 
-            samList.apply("Load: Write SAM into BigQuery", ParDo.of(writerService));
+            PCollection<TableRow> tableRows = samList.apply("Transform: Format from SAM Class to Table Row Class", ParDo.of(samToTableRow));
+
+            tableRows.apply("Load: Write SAM into BigQuery", bigQueryRepository.writeToBigQuery());
 
             PipelineResult result = pipeline.run();
             result.getState();
