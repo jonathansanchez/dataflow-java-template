@@ -1,14 +1,15 @@
 package com.verix.sam.domain.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public class LifeDate {
+public class LifeDate implements Serializable {
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("M/d/yyyy h:mm:ss a").withLocale(Locale.ROOT);
-    private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy").withLocale(Locale.ROOT);
+    private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("YYYY-MM-dd").withLocale(Locale.ROOT);
     private static final String REGEX_SPECIAL_CHARS = "[^a-zA-Z0-9\\s.-:/]";
     private static final String EMPTY_STRING = "";
 

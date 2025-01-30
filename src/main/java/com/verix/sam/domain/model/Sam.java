@@ -2,10 +2,11 @@ package com.verix.sam.domain.model;
 
 import com.verix.sam.domain.model.exception.InvalidPropertyException;
 
+import java.io.Serializable;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public class Sam {
+public class Sam implements Serializable {
     private static final String REGEX_SPECIAL_CHARS = "[^a-zA-Z0-9\\s._,-@#$/]";
     private static final String REPLACEMENT = "";
 
