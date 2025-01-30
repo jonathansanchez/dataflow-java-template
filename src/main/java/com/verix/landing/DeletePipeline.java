@@ -7,7 +7,6 @@ import com.verix.landing.domain.model.Landing;
 import com.verix.landing.infrastructure.config.JobOptions;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.PipelineResult;
-import org.apache.beam.sdk.coders.SerializableCoder;
 import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
@@ -23,11 +22,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
-public class DataPipeline {
+public class DeletePipeline {
 
     JobOptions options;
 
-    public DataPipeline(String[] args) {
+    public DeletePipeline(String[] args) {
 
         PipelineOptionsFactory.register(JobOptions.class);
         options = PipelineOptionsFactory
@@ -36,7 +35,6 @@ public class DataPipeline {
                 .as(JobOptions.class);
 
         options.setInput("gs://bucket-swc-test/landing/data/minilanding.csv");
-        options.setOutput("../Datos/modified_minilandingGCS");
         options.setOutputTable("dataset_swc_test.landing");
         options.setTempBucket("gs://bucket-swc-test/temp-files/landing");
 
@@ -148,7 +146,7 @@ public class DataPipeline {
     static class LandingMapper extends DoFn<Landing, Landing> {
         @ProcessElement
         public void processElement(@Element Landing l, OutputReceiver<Landing> out) {
-            System.out.println("Landing Object: " + l.getUniqueComponentId() + ", " + l.getApmCode() + ", " + l.getAppName() + ", " + l.getVendor() + ", " + l.getSoftwareType() + ", " + l.getSoftwareName());
+            System.out.println("Landing Object: " + l.getUniqueComponentId() + ", " + l.getApmCode() + ", " + l.getAppName() + ", " + l.getVendor() + ", " + l.getSwType() + ", " + l.getSwName());
             out.output(l);
         }
 
