@@ -10,7 +10,7 @@ class LifeDateTest {
     void Given_a_valid_string_date_When_try_to_create_Then_return_a_formated_date() {
         //Arrange
         String value = "12/17/2014 12:00:00 AM";
-        String expectedDate = "17/12/2014";
+        String expectedDate = "2014-12-17";
 
         //Act
         LifeDate date = LifeDate.create(value);

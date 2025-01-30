@@ -21,17 +21,17 @@ class SamTest {
         String fullVersion = "12.0.2456.0";
         String edition = "Standard";
         String internalAvailability = "1/25/2022 12:00:00 AM";
-        String expectedInternalAvailability = "25/01/2022";
+        String expectedInternalAvailability = "2022-01-25";
         String internalEOS = "7/9/2022 12:00:00 AM";
-        String expectedInternalEOS = "09/07/2022";
+        String expectedInternalEOS = "2022-07-09";
         String publisherAvailability = "12/17/2014 12:00:00 AM";
-        String expectedPublisherAvailability = "17/12/2014";
+        String expectedPublisherAvailability = "2014-12-17";
         String eos = "7/9/2022 12:00:00 AM";
-        String expectedEos = "09/07/2022";
+        String expectedEos = "2022-07-09";
         String eoes = "7/9/2024 12:00:00 AM";
-        String expectedEoes = "09/07/2024";
+        String expectedEoes = "2024-07-09";
         String eol = "7/9/2024 12:00:00 AM";
-        String expectedEol = "09/07/2024";
+        String expectedEol = "2024-07-09";
         String source = "samp_sw_product";
 
         //Act
