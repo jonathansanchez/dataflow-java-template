@@ -159,32 +159,23 @@ class SamTest {
         assertNotEquals(EMPTY_STRING, sam.getProductVersion());
         assertEquals(productVersion, sam.getProductVersion());
 
-        assertNotNull(sam.getVersion());
-        assertEquals(version, sam.getVersion());
+        assertNull(sam.getVersion());
 
-        assertNotNull(sam.getFullVersion());
-        assertEquals(fullVersion, sam.getFullVersion());
+        assertNull(sam.getFullVersion());
 
-        assertNotNull(sam.getEdition());
-        assertEquals(edition, sam.getEdition());
+        assertNull(sam.getEdition());
 
-        assertNotNull(sam.getInternalAvailability().getValue());
-        assertEquals(internalAvailability, sam.getInternalAvailability().getValue());
+        assertNull(sam.getInternalAvailability().getValue());
 
-        assertNotNull(sam.getInternalEOS().getValue());
-        assertEquals(internalEOS, sam.getInternalEOS().getValue());
+        assertNull(sam.getInternalEOS().getValue());
 
-        assertNotNull(sam.getPublisherAvailability().getValue());
-        assertEquals(publisherAvailability, sam.getPublisherAvailability().getValue());
+        assertNull(sam.getPublisherAvailability().getValue());
 
-        assertNotNull(sam.getEos().getValue());
-        assertEquals(eos, sam.getEos().getValue());
+        assertNull(sam.getEos().getValue());
 
-        assertNotNull(sam.getEoes().getValue());
-        assertEquals(eoes, sam.getEoes().getValue());
+        assertNull(sam.getEoes().getValue());
 
-        assertNotNull(sam.getEol().getValue());
-        assertEquals(eol, sam.getEol().getValue());
+        assertNull(sam.getEol().getValue());
 
         assertNotNull(sam.getSource());
         assertEquals(source, sam.getSource());
@@ -241,37 +232,28 @@ class SamTest {
         assertNotEquals(EMPTY_STRING, sam.getProductVersion());
         assertEquals(productVersion, sam.getProductVersion());
 
-        assertNotNull(sam.getVersion());
-        assertEquals(EMPTY_STRING, sam.getVersion());
+        assertNull(sam.getVersion());
 
-        assertNotNull(sam.getFullVersion());
-        assertEquals(EMPTY_STRING, sam.getFullVersion());
+        assertNull(sam.getFullVersion());
 
-        assertNotNull(sam.getEdition());
-        assertEquals(EMPTY_STRING, sam.getEdition());
+        assertNull(sam.getEdition());
 
-        assertNotNull(sam.getInternalAvailability().getValue());
-        assertEquals(EMPTY_STRING, sam.getInternalAvailability().getValue());
+        assertNull(sam.getInternalAvailability().getValue());
 
-        assertNotNull(sam.getInternalEOS().getValue());
-        assertEquals(EMPTY_STRING, sam.getInternalEOS().getValue());
+        assertNull(sam.getInternalEOS().getValue());
 
-        assertNotNull(sam.getPublisherAvailability().getValue());
-        assertEquals(EMPTY_STRING, sam.getPublisherAvailability().getValue());
+        assertNull(sam.getPublisherAvailability().getValue());
 
-        assertNotNull(sam.getEos().getValue());
-        assertEquals(EMPTY_STRING, sam.getEos().getValue());
+        assertNull(sam.getEos().getValue());
 
-        assertNotNull(sam.getEoes().getValue());
-        assertEquals(EMPTY_STRING, sam.getEoes().getValue());
+        assertNull(sam.getEoes().getValue());
 
-        assertNotNull(sam.getEol().getValue());
-        assertEquals(EMPTY_STRING, sam.getEol().getValue());
+        assertNull(sam.getEol().getValue());
 
         assertNotNull(sam.getSource());
         assertEquals(source, sam.getSource());
 
-        System.out.println(sam);
+        System.out.println(sam.toString());
     }
 
     @Test

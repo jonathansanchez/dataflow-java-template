@@ -30,8 +30,8 @@ class LifeDateTest {
         LifeDate date = LifeDate.create(value);
 
         //Assert
-        assertNotNull(date.getValue());
-        assertEquals("", date.getValue());
+        assertNotEquals("", date.getValue());
+        assertNull(date.getValue());
     }
 
     @Test
@@ -43,8 +43,8 @@ class LifeDateTest {
         LifeDate date = LifeDate.create(value);
 
         //Assert
-        assertNotNull(date.getValue());
-        assertEquals("", date.getValue());
+        assertNotEquals("", date.getValue());
+        assertNull(date.getValue());
     }
 
     @Test
@@ -56,8 +56,9 @@ class LifeDateTest {
         LifeDate date = LifeDate.create(value);
 
         //Assert
-        assertNotNull(date.getValue());
-        assertEquals("", date.getValue());
+        assertNotEquals(" ", date.getValue());
+        assertNotEquals("", date.getValue());
+        assertNull(date.getValue());
     }
 
     @Test

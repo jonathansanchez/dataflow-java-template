@@ -154,7 +154,27 @@ public class Sam implements Serializable {
                                 .trim()
                                 .replaceAll(REGEX_SPECIAL_CHARS, REPLACEMENT))
                 .filter(Predicate.not(String::isEmpty))
-                .orElse(REPLACEMENT);
+                .orElse(null);
 
+    }
+
+    @Override
+    public String toString() {
+        return "Sam{" +
+                "publisher='" + publisher + '\'' +
+                ", category='" + category + '\'' +
+                ", product='" + product + '\'' +
+                ", productVersion='" + productVersion + '\'' +
+                ", version='" + version + '\'' +
+                ", fullVersion='" + fullVersion + '\'' +
+                ", edition='" + edition + '\'' +
+                ", internalAvailability=" + internalAvailability +
+                ", internalEOS=" + internalEOS +
+                ", publisherAvailability=" + publisherAvailability +
+                ", eos=" + eos +
+                ", eoes=" + eoes +
+                ", eol=" + eol +
+                ", source='" + source + '\'' +
+                '}';
     }
 }

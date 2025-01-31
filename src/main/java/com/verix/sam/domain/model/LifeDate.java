@@ -37,7 +37,7 @@ public class LifeDate implements Serializable {
                     LocalDate date = LocalDate.parse(s, INPUT_FORMAT);
                     return date.format(OUTPUT_FORMAT);
                 })
-                .orElse(EMPTY_STRING);
+                .orElse(null);
     }
 
     public String getValue() {
