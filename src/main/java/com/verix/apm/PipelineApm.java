@@ -57,7 +57,7 @@ public class PipelineApm {
         PCollection<TableRow> tableRows = transformToTableRows(rawData);
 
         // Paso 3 Escribir en BigQuery
-        //writeToBigQuery(tableRows);
+        writeToBigQuery(tableRows);
 
         // Paso 4: Ejecutar el pipeline
         runPipeline(pipeline);

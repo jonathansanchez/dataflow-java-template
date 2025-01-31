@@ -13,6 +13,7 @@ public class RemoveLineBreaksTransformation extends DoFn<String, String> {
     @ProcessElement
     public void processElement(@Element String line, OutputReceiver<String> out) {
         String cleanedLine = line.replaceAll(REGEX_LINE_BREAK, EMPTY_STRING).trim();
+        System.out.println("Cleaned Line: " + cleanedLine);
         out.output(cleanedLine); //emite una linea limpia
     }
 }

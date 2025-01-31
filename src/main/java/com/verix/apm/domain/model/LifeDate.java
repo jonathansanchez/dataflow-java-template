@@ -1,13 +1,14 @@
 package com.verix.apm.domain.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public class LifeDate {
-    private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("d-MMM-yyyy", Locale.ENGLISH);
+public class LifeDate implements Serializable {
+    private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("dd-MMM-yyyy", Locale.ENGLISH);
     private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private final String value;

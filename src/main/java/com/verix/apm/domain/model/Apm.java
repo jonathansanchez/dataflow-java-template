@@ -1,7 +1,16 @@
 package com.verix.apm.domain.model;
 
+import com.verix.apm.domain.model.exception.InvalidPropertyException;
+
+import java.io.Serializable;
+import java.util.Optional;
+import java.util.function.Predicate;
+
 //Atributos/Priopiedades
-public class Apm {
+public class Apm implements Serializable {
+    private static final String REGEX_SPECIAL_CHARS = "[^a-zA-Z0-9\\s.,-@#$/]";
+    private static final String REPLACEMENT = "";
+
     private final String apmCode;
     private final String apmName;
     private final Boolean isCompliant;
@@ -19,7 +28,7 @@ public class Apm {
     private final String iso;
 
     //Constructor: recibe todos los valores - Asigna valores
-    public Apm(String apmCode, String apmName, Boolean isCompliant, Boolean cia, String lcState, LifeDate productionDate, LifeDate retirementDate, String dbrRating, Boolean applicationTested, String applicationContact, String manager, String vp, String svp, String portfolioOwner, String iso) {
+/*    public Apm(String apmCode, String apmName, Boolean isCompliant, Boolean cia, String lcState, LifeDate productionDate, LifeDate retirementDate, String dbrRating, Boolean applicationTested, String applicationContact, String manager, String vp, String svp, String portfolioOwner, String iso) {
         this.apmCode = StringCleaner.removeSpecialCharsForRequired(apmCode);
         this.apmName = StringCleaner.removeSpecialCharsForOptional(apmName);
         this.isCompliant = BooleanCleaner.parseBoolean(String.valueOf(isCompliant));
@@ -35,24 +44,112 @@ public class Apm {
         this.svp = StringCleaner.removeSpecialCharsForOptional(svp);
         this.portfolioOwner = StringCleaner.removeSpecialCharsForOptional(portfolioOwner);
         this.iso = StringCleaner.removeSpecialCharsForOptional(iso);
+
+        public String getApmCode() { return apmCode; }
+        public String getApmName() { return apmName; }
+        public Boolean getIsCompliant() { return isCompliant; }
+        public Boolean getCia() { return cia; }
+        public String getLcState() { return lcState; }
+        public LifeDate getProductionDate() { return productionDate; }
+        public LifeDate getRetirementDate() { return retirementDate; }
+        public String getDbrRating() { return dbrRating; }
+        public Boolean getApplicationTested() { return applicationTested; }
+        public String getApplicationContact() { return applicationContact; }
+        public String getManager() { return manager; }
+        public String getVp() { return vp; }
+        public String getSvp() { return svp; }
+        public String getPortfolioOwner() { return portfolioOwner; }
+        public String getIso() { return iso; }
+    }*/
+
+        public Apm(String apmCode, String apmName, Boolean isCompliant, Boolean cia, String lcState, LifeDate productionDate, LifeDate retirementDate, String dbrRating, Boolean applicationTested, String applicationContact, String manager, String vp, String svp, String portfolioOwner, String iso) {
+        this.apmCode = setApmCode(apmCode);
+        this.apmName = setApmName(apmName);
+        this.isCompliant = setIsCompliant(isCompliant);
+        this.cia = setCia(cia);
+        this.lcState = setLcState(lcState);
+        this.productionDate = productionDate;
+        this.retirementDate = retirementDate;
+        this.dbrRating = setDbrRating(dbrRating);
+        this.applicationTested = setApplicationTested(applicationTested);
+        this.applicationContact = setApplicationContact(applicationContact);
+        this.manager = setManager(manager);
+        this.vp = setVp(vp);
+        this.svp = setSvp(svp);
+        this.portfolioOwner = setPortfolioOwner(portfolioOwner);
+        this.iso = setIso(iso);
     }
 
     // Métodos Getters: permiten acceder a los atributos de la clase
     // Los métodos setXX aplican una limpieza de caracteres especiales antes de la asignación en el constructor.
     public String getApmCode() { return apmCode; }
+    public String setApmCode(String apmCode){return removeSpecialCharsForRequired(apmCode);}
+
     public String getApmName() { return apmName; }
+    public String setApmName(String apmName){return removeSpecialCharsForOptional(apmName);}
+
     public Boolean getIsCompliant() { return isCompliant; }
+    public Boolean setIsCompliant(Boolean isCompliant){return BooleanCleaner(String.valueOf(isCompliant));}
+
     public Boolean getCia() { return cia; }
+    public Boolean setCia(Boolean cia){return BooleanCleaner(String.valueOf(cia));}
+
     public String getLcState() { return lcState; }
+    public String setLcState(String lcState){return removeSpecialCharsForOptional(lcState);}
+
     public LifeDate getProductionDate() { return productionDate; }
     public LifeDate getRetirementDate() { return retirementDate; }
-    public String getDbrRating() { return dbrRating; }
-    public Boolean getApplicationTested() { return applicationTested; }
-    public String getApplicationContact() { return applicationContact; }
-    public String getManager() { return manager; }
-    public String getVp() { return vp; }
-    public String getSvp() { return svp; }
-    public String getPortfolioOwner() { return portfolioOwner; }
-    public String getIso() { return iso; }
 
+    public String getDbrRating() { return dbrRating; }
+    public String setDbrRating(String dbrRating){return removeSpecialCharsForOptional(dbrRating);}
+
+    public Boolean getApplicationTested() { return applicationTested; }
+    public Boolean setApplicationTested(Boolean applicationTested){return BooleanCleaner(String.valueOf(applicationTested));}
+
+    public String getApplicationContact() { return applicationContact; }
+    public String setApplicationContact(String applicationContact){return removeSpecialCharsForRequired(applicationContact);}
+
+    public String getManager() { return manager; }
+    public String setManager(String manager){return removeSpecialCharsForOptional(manager);}
+
+    public String getVp() { return vp; }
+    public String setVp(String vp){return removeSpecialCharsForRequired(vp);}
+
+    public String getSvp() { return svp; }
+    public String setSvp(String svp){return removeSpecialCharsForOptional(svp);}
+
+    public String getPortfolioOwner() { return portfolioOwner; }
+    public String setPortfolioOwner(String portfolioOwner){return removeSpecialCharsForOptional(portfolioOwner);}
+
+    public String getIso() { return iso; }
+    public String setIso(String iso){return removeSpecialCharsForOptional(iso);}
+
+
+
+    private String removeSpecialCharsForRequired(String value) {
+        return Optional
+                .ofNullable(value)
+                .orElseThrow(InvalidPropertyException::thrown)
+                .trim()
+                .replaceAll(REGEX_SPECIAL_CHARS, REPLACEMENT);
+    }
+
+    private String removeSpecialCharsForOptional(String value) {
+        return Optional
+                .ofNullable(value)
+                .filter(Predicate.not(String::isEmpty))
+                .map(s ->
+                        s
+                                .trim()
+                                .replaceAll(REGEX_SPECIAL_CHARS, REPLACEMENT))
+                .orElse(REPLACEMENT);
+
+    }
+
+    private static Boolean BooleanCleaner(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
+        return "YES".equalsIgnoreCase(value); //ignora mayus o minuscula
+    }
 }
