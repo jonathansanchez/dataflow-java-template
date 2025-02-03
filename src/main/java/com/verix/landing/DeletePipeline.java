@@ -21,7 +21,7 @@ import org.apache.beam.sdk.values.TypeDescriptor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
-
+//TODO: delete this pipeline class and delete branch from github
 public class DeletePipeline {
 
     JobOptions options;
@@ -48,9 +48,9 @@ public class DeletePipeline {
         //writeBigQuery(extractedData);
 
         //PCollection<Landing> convertLanding = extractedData.apply("Convertir en clase Landing", getVia());
-        PCollection<Landing> convertLanding = extractedData.apply("Convertir Landing", ParDo.of(new ConvertLanding()));
+        //PCollection<Landing> convertLanding = extractedData.apply("Convertir Landing", ParDo.of(new ConvertLanding()));
 
-        convertLanding.apply("Print Landing", ParDo.of(new LandingMapper()));
+        //convertLanding.apply("Print Landing", ParDo.of(new LandingMapper()));
 
         PipelineResult result = pipeline.run();
         try {
@@ -61,14 +61,6 @@ public class DeletePipeline {
         }
     }
 
-    @NotNull
-    private static MapElements<String, Landing> getVia() {
-        return MapElements.into(TypeDescriptor.of(Landing.class))
-                .via(line -> {
-                    String[] splitValue = line.toString().split(",");
-                    return new Landing(splitValue[0], splitValue[1], splitValue[2], splitValue[3], splitValue[4], splitValue[5]);
-                });
-    }
 
     private void writeBigQuery(PCollection<String> lines){
         String name = "Transform: Convert data in Row";
@@ -135,13 +127,13 @@ public class DeletePipeline {
         }
     }
 
-    static class ConvertLanding extends DoFn<String, Landing>{
+    /*static class ConvertLanding extends DoFn<String, Landing>{
         @ProcessElement
         public void processElement(@Element String line, OutputReceiver<Landing> out) {
             String[] splitValue = line.toString().split(",");
             out.output(new Landing(splitValue[0], splitValue[1], splitValue[2], splitValue[3], splitValue[4], splitValue[5]));
         }
-    }
+    }*/
 
     static class LandingMapper extends DoFn<Landing, Landing> {
         @ProcessElement

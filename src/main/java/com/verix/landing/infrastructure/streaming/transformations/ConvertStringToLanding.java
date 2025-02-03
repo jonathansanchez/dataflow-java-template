@@ -11,17 +11,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ConvertStringToLanding extends DoFn<String, Landing> {
-
-    private static final String COMMA = ",";
+    private static final String REGEX_QUOTES = "\"([^\"]*)\"|([^,]+)|(?<=,)(?=,)";
 
     @ProcessElement
     public void processElement(@Element String line, OutputReceiver<Landing> out) {
         List<String> splitValue = Optional
                 .ofNullable(line)
-                .map(s -> Arrays.asList(s.trim().split(COMMA)))
-                //.map(ConvertStringToLanding::parseLineInQuotes)
+                .map(ConvertStringToLanding::parseLineInQuotes)
                 .orElseThrow(RuntimeException::new);
-        System.out.println("dato: " + splitValue);
+        System.out.println(splitValue.size() + " - " + splitValue);
         out.output(
                 new Landing(
                         splitValue.get(0),
@@ -61,19 +59,13 @@ public class ConvertStringToLanding extends DoFn<String, Landing> {
         );
     }
 
-    /*private static List<String> parseLineInQuotes(String line) {
+    private static List<String> parseLineInQuotes(String line) {
         List<String> col = new ArrayList<>();
-        Matcher matcher = Pattern.compile("\"([^\"]*)\"|([^,]+)").matcher(line);
+        Matcher matcher = Pattern.compile(REGEX_QUOTES).matcher(line);
         while(matcher.find()){
             String value = matcher.group(1) != null ? matcher.group(1) : matcher.group(2);
-            col.add(value.trim());
+            col.add(value);
         }
         return col;
     }
-
-    public static void main(String[] args) {
-        String valor = "\"hola como estas\",hola, como, estas, \"hola, como \nestas\" ";
-        System.out.println(valor);
-        System.out.println(parseLineInQuotes(valor));
-    }*/
 }

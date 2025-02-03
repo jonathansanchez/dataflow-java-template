@@ -55,15 +55,6 @@ public class Landing implements Serializable {
     String lifecycle;
     String environments;
 
-//TODO: Borrar este constructor
-    public Landing(String uniqueComponentId, String apmCode, String appName, String vendor, String softwareType, String softwareName) {
-        this.uniqueComponentId = uniqueComponentId;
-        this.apmCode = apmCode;
-        this.appName = appName;
-        this.vendor = vendor;
-        this.swType = softwareType;
-        this.swName = softwareName;
-    }
 
     public Landing(String uniqueComponentId, String apmCode, String appName, String vendor, String swType, String swName, String swId, String swVersion, String swExpireIn, String groupHeadName, String businessLines, String dbrTier, String swValidPlan, String appValidPlan, String swPlanStatus, String planNo, String planName, String planStartDate, String planEndDate, String planFunded, String refNumber, String planComments, String planExternalCost, String planInternalCost, String planLicenseCost, String eosDate, String extendedDate, String extendedCustomDate, String localRCMP, String countryName, String internetFacing, String usFlag, String lifecycle, String environments) {
         this.uniqueComponentId = setUniqueComponentId(uniqueComponentId);

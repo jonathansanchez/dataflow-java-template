@@ -7,6 +7,7 @@ import com.verix.landing.infrastructure.config.JobOptions;
 import com.verix.landing.infrastructure.repository.BigQueryRepository;
 import com.verix.landing.infrastructure.streaming.transformations.ConvertLandingToTableRow;
 import com.verix.landing.infrastructure.streaming.transformations.ConvertStringToLanding;
+import com.verix.landing.infrastructure.streaming.transformations.RemoveLineBreaks;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.PipelineResult;
 import org.apache.beam.sdk.io.TextIO;
@@ -19,13 +20,15 @@ public class LandingPipeline implements DataPipeline {
     private final Pipeline pipeline;
     private final ConvertStringToLanding convertStringToLanding;
     private final ConvertLandingToTableRow convertLandingToTableRow;
+    private final RemoveLineBreaks removeLineBreaks;
     private final BigQueryRepository bigQueryRepository;
 
-    public LandingPipeline(JobOptions options, Pipeline pipeline, ConvertStringToLanding convertStringToLanding, ConvertLandingToTableRow convertLandingToTableRow, BigQueryRepository bigQueryRepository) {
+    public LandingPipeline(JobOptions options, Pipeline pipeline, ConvertStringToLanding convertStringToLanding, ConvertLandingToTableRow convertLandingToTableRow, RemoveLineBreaks removeLineBreaks, BigQueryRepository bigQueryRepository) {
         this.options = options;
         this.pipeline = pipeline;
         this.convertStringToLanding = convertStringToLanding;
         this.convertLandingToTableRow = convertLandingToTableRow;
+        this.removeLineBreaks = removeLineBreaks;
         this.bigQueryRepository = bigQueryRepository;
     }
 
@@ -35,7 +38,8 @@ public class LandingPipeline implements DataPipeline {
             // Extract
             PCollection<String> rawData = pipeline.apply("Extract: Read CSV from Data Lake", TextIO.read().withSkipHeaderLines(1).from(options.getInput()));
             // Transform
-            PCollection<Landing> landingData = rawData.apply("Transform: Conversion from String to Landing", ParDo.of(convertStringToLanding));
+            PCollection<String> cleanedData = rawData.apply("Transform: Remove Line Breaks", ParDo.of(removeLineBreaks));
+            PCollection<Landing> landingData = cleanedData.apply("Transform: Conversion from String to Landing", ParDo.of(convertStringToLanding));
             PCollection<TableRow> tableRowData = landingData.apply("Transform: Conversion from Landing to TableRow", ParDo.of(convertLandingToTableRow));
             // Load
             tableRowData.apply("Load: Write Landing to BigQuery", bigQueryRepository.writeToBigQuery());
