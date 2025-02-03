@@ -33,7 +33,7 @@ gcloud dataflow flex-template build gs://$BUCKET/sam/templates/sam.json \
 --env FLEX_TEMPLATE_JAVA_MAIN_CLASS="com.verix.sam.Application"
 ```
 
-#### Create the template:
+#### Run the template:
 ```shell
 gcloud dataflow flex-template run "sam"  \
     --template-file-gcs-location "gs://$BUCKET/sam/templates/sam.json" \

@@ -106,7 +106,7 @@
 					</archive>
 				</configuration>
 			</plugin>
-			<!--plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
 				<version>${maven-shade-plugin.version}</version>
@@ -135,7 +135,7 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin-->
+			</plugin>
 		</plugins>
 	</build>
 
