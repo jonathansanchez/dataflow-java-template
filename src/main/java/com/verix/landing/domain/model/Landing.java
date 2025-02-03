@@ -3,11 +3,8 @@ package com.verix.landing.domain.model;
 import com.verix.landing.domain.model.exception.InvalidPropertyException;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -15,11 +12,13 @@ import java.util.function.Predicate;
 public class Landing implements Serializable {
 
     private static final DateTimeFormatter INPUT_DATE_FORMAT = DateTimeFormatter.ofPattern("MM/dd/yyyy").withLocale(Locale.ROOT);
-    private static final DateTimeFormatter OUTPUT_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy").withLocale(Locale.ROOT);
+    private static final DateTimeFormatter OUTPUT_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd").withLocale(Locale.ROOT);
     private static final String EMPTY_STRING = "";
     private static final String REGEX_SPECIAL_CHARS = "[^a-zA-Z0-9\\s._,-@#$/]";
     private static final String YES = "yes";
     private static final String NO = "no";
+    private static final String TRUE = "true";
+    private static final String FALSE = "false";
 
     String uniqueComponentId;
     String apmCode;
@@ -36,6 +35,7 @@ public class Landing implements Serializable {
     Boolean swValidPlan;
     Boolean appValidPlan;
     String swPlanStatus;
+    Integer planNo;
     String planName;
     String planStartDate;
     String planEndDate;
@@ -65,7 +65,7 @@ public class Landing implements Serializable {
         this.swName = softwareName;
     }
 
-    public Landing(String uniqueComponentId, String apmCode, String appName, String vendor, String swType, String swName, String swId, String swVersion, String swExpireIn, String groupHeadName, String businessLines, String dbrTier, String swValidPlan, String appValidPlan, String swPlanStatus, String planName, String planStartDate, String planEndDate, String planFunded, String refNumber, String planComments, String planExternalCost, String planInternalCost, String planLicenseCost, String eosDate, String extendedDate, String extendedCustomDate, String localRCMP, String countryName, String internetFacing, String usFlag, String lifecycle, String environments) {
+    public Landing(String uniqueComponentId, String apmCode, String appName, String vendor, String swType, String swName, String swId, String swVersion, String swExpireIn, String groupHeadName, String businessLines, String dbrTier, String swValidPlan, String appValidPlan, String swPlanStatus, String planNo, String planName, String planStartDate, String planEndDate, String planFunded, String refNumber, String planComments, String planExternalCost, String planInternalCost, String planLicenseCost, String eosDate, String extendedDate, String extendedCustomDate, String localRCMP, String countryName, String internetFacing, String usFlag, String lifecycle, String environments) {
         this.uniqueComponentId = setUniqueComponentId(uniqueComponentId);
         this.apmCode = setApmCode(apmCode);
         this.appName = setAppName(appName);
@@ -81,6 +81,7 @@ public class Landing implements Serializable {
         this.swValidPlan = setSwValidPlan(swValidPlan);
         this.appValidPlan = setAppValidPlan(appValidPlan);
         this.swPlanStatus = setSwPlanStatus(swPlanStatus);
+        this.planNo = setPlanNo(planNo);
         this.planName = setPlanName(planName);
         this.planStartDate = setPlanStartDate(planStartDate);
         this.planEndDate = setPlanEndDate(planEndDate);
@@ -282,11 +283,11 @@ public class Landing implements Serializable {
     }
 
     public Boolean setSwValidPlan(String swValidPlan) {
-        return parseBoolean(swValidPlan);
+        return parseBooleanForRequired(swValidPlan);
     }
 
     public Boolean setAppValidPlan(String appValidPlan) {
-        return parseBoolean(appValidPlan);
+        return parseBooleanForRequired(appValidPlan);
     }
 
     public String setSwPlanStatus(String swPlanStatus) {
@@ -306,7 +307,7 @@ public class Landing implements Serializable {
     }
 
     public Boolean setPlanFunded(String planFunded) {
-        return parseBoolean(planFunded);
+        return parseBooleanForOptional(planFunded);
     }
 
     public String setRefNumber(String refNumber) {
@@ -342,18 +343,18 @@ public class Landing implements Serializable {
     }
 
     public Boolean setLocalRCMP(String localRCMP) {
-        return parseBoolean(localRCMP);
+        return parseBooleanForRequired(localRCMP);
     }
 
     public String setCountryName(String countryName) {
         return removeSpecialCharsForRequired(countryName);    }
 
     public Boolean setInternetFacing(String internetFacing) {
-        return parseBoolean(internetFacing);
+        return parseBooleanForRequired(internetFacing);
     }
 
     public Boolean setUsFlag(String usFlag) {
-        return parseBoolean(usFlag);
+        return parseBooleanForRequired(usFlag);
     }
 
     public String setLifecycle(String lifecycle) {
@@ -361,6 +362,14 @@ public class Landing implements Serializable {
 
     public String setEnvironments(String environments) {
         return removeSpecialCharsForRequired(environments);
+    }
+
+    public Integer getPlanNo() {
+        return planNo;
+    }
+
+    public Integer setPlanNo(String planNo) {
+        return parseIntegerForOptional(planNo);
     }
 
     private String parseDate(String date){
@@ -372,7 +381,7 @@ public class Landing implements Serializable {
                     LocalDate formattedDate = LocalDate.parse(s.trim(), INPUT_DATE_FORMAT);
                     return formattedDate.format(OUTPUT_DATE_FORMAT);
                 }).
-                orElse(EMPTY_STRING);
+                orElse(null);
     }
 
     private String removeSpecialCharsForRequired(String value){
@@ -390,26 +399,44 @@ public class Landing implements Serializable {
 
     }
 
-    private String removeSpecialCharsForOptional(String value){
+    private String removeSpecialCharsForOptional(String value) {
         return Optional
                 .ofNullable(value)
                 .filter(Predicate.not(String::isEmpty))
-                .orElse(EMPTY_STRING)
-                .trim()
-                .replaceAll(REGEX_SPECIAL_CHARS, EMPTY_STRING);
+                .map(s ->
+                        s
+                                .trim()
+                                .replaceAll(REGEX_SPECIAL_CHARS, EMPTY_STRING))
+                .filter(Predicate.not(String::isEmpty))
+                .orElse(null);
+
     }
 
-    private boolean parseBoolean(String value){
+    private Boolean parseBooleanForRequired(String value){
         return switch(removeSpecialCharsForRequired(value).toLowerCase()){
-            case YES -> true;
-            case NO -> false;
+            case YES, TRUE -> true;
+            case NO, FALSE -> false;
             default -> throw new IllegalStateException("Unexpected value to parse as Boolean: " + value);
         };
     }
 
+    private Boolean parseBooleanForOptional(String value){
+        return Optional.ofNullable(removeSpecialCharsForOptional(value))
+                .map(s -> {
+                    String lowerCase = s.toLowerCase();
+                    return switch(lowerCase){
+                        case YES, TRUE -> true;
+                        case NO, FALSE -> false;
+                        default -> null;
+                    };
+                }).orElse(null);
+
+    }
+
     private Integer parseIntegerForOptional(String value){
         return Optional
-                .of(Integer.parseInt(removeSpecialCharsForOptional(value)))
+                .ofNullable(removeSpecialCharsForOptional(value))
+                .map(Integer::parseInt)
                 .orElse(null);
     }
 }

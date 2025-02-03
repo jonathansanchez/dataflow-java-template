@@ -38,6 +38,7 @@ public class LandingTableSchema {
                                 new TableFieldSchema().setName("sw_valid_plan").setType(BOOL.name()).setMode("REQUIRED"),
                                 new TableFieldSchema().setName("app_valid_plan").setType(BOOL.name()).setMode("REQUIRED"),
                                 new TableFieldSchema().setName("sw_plan_status").setType(STRING.name()).setMode("REQUIRED"),
+                                new TableFieldSchema().setName("plan_number").setType(INT64.name()),
                                 new TableFieldSchema().setName("plan_name").setType(STRING.name()),
                                 new TableFieldSchema().setName("plan_start_date").setType(DATE.name()),
                                 new TableFieldSchema().setName("plan_finish_date").setType(DATE.name()),
