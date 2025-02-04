@@ -1,6 +1,6 @@
 {
-  "name": "Java flex template",
-  "description": "An example flex template for Java 17.",
+  "name": "Java Flex Template",
+  "description": "Data Pipeline Flex Template for Forecast in Java 17.",
   "parameters": [
     {
       "name": "input",
