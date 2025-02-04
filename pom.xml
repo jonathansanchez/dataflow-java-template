@@ -4,10 +4,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.verix</groupId>
-	<artifactId>sam</artifactId>
+	<artifactId>forecast</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>sam</name>
-	<description>DataFlow Java 17 SAM</description>
+	<name>forecast</name>
+	<description>DataFlow Java 17 Forecast Strategy</description>
 
 	<packaging>jar</packaging>
 
@@ -54,16 +54,6 @@
 			<artifactId>google-cloud-bigquery</artifactId>
 			<version>${cloud.version}</version>
 		</dependency>
-		<!--dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-jdk14</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency-->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
@@ -101,7 +91,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.verix.sam.Application</mainClass>
+							<mainClass>com.verix.forecast.Application</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

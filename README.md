@@ -16,27 +16,32 @@ Use Case:
 #### Set environment variables:
 ```shell
 export REGION="us-central1"
-export REPOSITORY="sam-repository"
+export REPOSITORY="forecast-repository"
 export BUCKET="[BUCKET_NAME]"
 export PROJECT="[GCP_PROJECT_NAME]"
 export DATASET="[DATASET.TABLE_NAME]"
 ```
 
-#### Create the template:
+#### Create the Artifact:
 ```shell
-gcloud dataflow flex-template build gs://$BUCKET/sam/templates/sam.json \
---image-gcr-path "$REGION-docker.pkg.dev/$PROJECT/$REPOSITORY/sam:0.0.1-SNAPSHOT" \
+gcloud artifacts repositories create $REPOSITORY --repository-format=docker --location=$REGION
+```
+
+#### Create the Template:
+```shell
+gcloud dataflow flex-template build gs://$BUCKET/forecast/templates/forecast.json \
+--image-gcr-path "$REGION-docker.pkg.dev/$PROJECT/$REPOSITORY/forecast:0.0.1-SNAPSHOT" \
 --sdk-language "JAVA" \
 --flex-template-base-image JAVA17 \
 --metadata-file "metadata.json" \
---jar "target/sam-0.0.1-SNAPSHOT.jar" \
---env FLEX_TEMPLATE_JAVA_MAIN_CLASS="com.verix.sam.Application"
+--jar "target/forecast-0.0.1-SNAPSHOT.jar" \
+--env FLEX_TEMPLATE_JAVA_MAIN_CLASS="com.verix.forecast.Application"
 ```
 
-#### Run the template:
+#### Run the Template:
 ```shell
-gcloud dataflow flex-template run "sam"  \
-    --template-file-gcs-location "gs://$BUCKET/sam/templates/sam.json" \
+gcloud dataflow flex-template run "forecast"  \
+    --template-file-gcs-location "gs://$BUCKET/forecast/templates/forecast.json" \
     --region $REGION \
-    --parameters input=gs://$BUCKET/sam/data/20250127/sam.csv,output=$DATASET,temp=gs://$BUCKET/sam/data/temp-files
+    --parameters input=gs://$BUCKET/forecast/data/forecast.csv,output=$DATASET,temp=gs://$BUCKET/forecast/data/temp-files,tempLocation=gs://$BUCKET/forecast/temp-files,stagingLocation=gs://$BUCKET/forecast/temp-files
 ```
