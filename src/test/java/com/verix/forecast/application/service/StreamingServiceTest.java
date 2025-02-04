@@ -1,6 +1,6 @@
-package com.verix.sam.application.service;
+package com.verix.forecast.application.service;
 
-import com.verix.sam.domain.model.DataPipeline;
+import com.verix.forecast.domain.model.DataPipeline;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
