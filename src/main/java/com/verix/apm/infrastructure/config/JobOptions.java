@@ -15,4 +15,33 @@ public interface JobOptions extends PipelineOptions {
     @Description("Temp bucket location")
     String getTempBucket();
     void setTempBucket(String tempBucket);
+
+    //
+    @Description("Country CL")
+    String getCl();
+    void setCl(String inputCl);
+
+    @Description("Country CCA")
+    String getCca();
+    void setCca(String inputCCA);
+
+    @Description("Country CO")
+    String getCo();
+    void setCo(String inputCO);
+
+    @Description("Country MX")
+    String getMx();
+    void setMx(String inputMX);
+
+    @Description("Country PE")
+    String getPe();
+    void setPe(String inputPE);
+
+    @Description("Country UY")
+    String getUy();
+    void setUy(String inputUY);
+
+    @Description("Country IB")
+    String getIb();
+    void setIb(String inputIB);
 }

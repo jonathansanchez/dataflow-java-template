@@ -13,20 +13,19 @@ import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.PipelineResult;
 import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.transforms.DoFn;
-import org.apache.beam.sdk.transforms.Filter;
 import org.apache.beam.sdk.transforms.ParDo;
-import org.apache.beam.sdk.transforms.SerializableFunction;
 import org.apache.beam.sdk.values.PCollection;
 import java.io.Serializable;
 
 public class ApacheBeamDataPipeline implements DataPipeline {
 
-    private final Pipeline pipeline; // construye y ejecuta las transformaciones
-    private final StringToApmTransformation stringToApmTransformation; //convierte String a objeto
+    private final Pipeline pipeline;
+    private final StringToApmTransformation stringToApmTransformation;
     private final ApmToTableRow apmToTableRow;
     private final JobOptions options;
     private final BigQueryRepository bigQueryRepository;
     private final ReplaceCommasInQuotesFn replaceCommasInQuotesFn;
+    //private final AddCountryToApmTransformation addCountryToApmTransformation;
 
     public ApacheBeamDataPipeline(JobOptions options,
                                   Pipeline pipeline,
@@ -40,6 +39,7 @@ public class ApacheBeamDataPipeline implements DataPipeline {
         this.stringToApmTransformation = stringToApmTransformation;
         this.apmToTableRow = apmToTableRow;
         this.bigQueryRepository = bigQueryRepository;
+        //this.addCountryToApmTransformation = addCountryToApmTransformation;
     }
 
     @Override
@@ -61,12 +61,16 @@ public class ApacheBeamDataPipeline implements DataPipeline {
             PCollection<Apm> apmList = processedData.apply("Transform: Format from String to APM Class and fields", ParDo.of(stringToApmTransformation));
             //apmList.apply("imrime",ParDo.of(new PrintObject()));
 
+            // Agrega el pais y devuelve un objeto
+            //PCollection<Apm> apmWithCountry = apmList.apply("Add Country Column", ParDo.of(addCountryToApmTransformation));
+            //apmWithCountry.apply("imrime",ParDo.of(new PrintObject()));
+
+
             // Convertir de objeto a tablerow
             PCollection<TableRow> tableRows  = apmList.apply("Transform: Format from APM Class to Table Row Class",ParDo.of(apmToTableRow));
 
 
-            //BigQueryRepository(tableRoe);
-            //tableRows.apply("Load: Write APM into BigQuery", bigQueryRepository.writeToBigQuery());
+            tableRows.apply("Load: Write APM into BigQuery", bigQueryRepository.writeToBigQuery());
 
 
             PipelineResult result = pipeline.run();
@@ -84,12 +88,6 @@ public class ApacheBeamDataPipeline implements DataPipeline {
         }
     }
 
-    public class PrintObject extends DoFn<Apm, Void> implements Serializable {
-        @ProcessElement
-        public void processElement(@Element Apm apm) {
-            System.out.println("Elemento de Objecto: " +apm);
-        }
-    }
 
     private static class PrintNumberOfColumns extends DoFn<String, Void> {
         @ProcessElement
@@ -114,29 +112,4 @@ public class ApacheBeamDataPipeline implements DataPipeline {
             }
         }
     }
-
-/*    private static class PrintNumberOfColumns extends DoFn<String, Void> {
-        @ProcessElement
-        public void processElement(@Element String element, OutputReceiver<Void> out) {
-            String[] columns = element.split(",");
-
-            // Verificar si todas las columnas son vacías (es decir, una fila de solo comas)
-            boolean isEmptyRow = true;
-            for (String column : columns) {
-                if (!column.trim().isEmpty()) {
-                    isEmptyRow = false;
-                    break;
-                }
-            }
-
-            // Si la fila está vacía (solo comas)
-            if (isEmptyRow) {
-                System.out.println("Fila vacía: " + element);
-            }
-            // Si la fila no tiene exactamente 15 columnas
-            else if (columns.length != 15) {
-                System.out.println("Índice [0]: " + columns[0] + " | Columnas: " + columns.length);
-            }
-        }
-    }*/
 }

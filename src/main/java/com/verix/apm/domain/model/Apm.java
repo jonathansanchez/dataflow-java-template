@@ -27,6 +27,7 @@ public class Apm implements Serializable {
     private final String svp;
     private final String portfolioOwner;
     private final String iso;
+    private final String country;
 
     //Constructor: recibe todos los valores - Asigna valores
 /*    public Apm(String apmCode, String apmName, Boolean isCompliant, Boolean cia, String lcState, LifeDate productionDate, LifeDate retirementDate, String dbrRating, Boolean applicationTested, String applicationContact, String manager, String vp, String svp, String portfolioOwner, String iso) {
@@ -63,7 +64,7 @@ public class Apm implements Serializable {
         public String getIso() { return iso; }
     }*/
 
-        public Apm(String apmCode, String apmName, String isCompliant, String cia, String lcState, LifeDate productionDate, LifeDate retirementDate, String dbrRating, String applicationTested, String applicationContact, String manager, String vp, String svp, String portfolioOwner, String iso) {
+        public Apm(String apmCode, String apmName, String isCompliant, String cia, String lcState, LifeDate productionDate, LifeDate retirementDate, String dbrRating, String applicationTested, String applicationContact, String manager, String vp, String svp, String portfolioOwner, String iso, String country) {
         this.apmCode = setApmCode(apmCode);
         this.apmName = setApmName(apmName);
         this.isCompliant = setIsCompliant(isCompliant);
@@ -79,6 +80,7 @@ public class Apm implements Serializable {
         this.svp = setSvp(svp);
         this.portfolioOwner = setPortfolioOwner(portfolioOwner);
         this.iso = setIso(iso);
+        this.country=country;
     }
 
 
@@ -127,6 +129,8 @@ public class Apm implements Serializable {
     public String getIso() { return iso; }
     public String setIso(String iso){return removeSpecialCharsForOptional(iso);}
 
+    public String getCountry(){return country;}
+
 
 
     private String removeSpecialCharsForRequired(String value) {
@@ -140,9 +144,9 @@ public class Apm implements Serializable {
     private String removeSpecialCharsForOptional(String value) {
         return Optional
                 .ofNullable(value)
-                .filter(Predicate.not(String::isEmpty)) // 2️⃣ Filtra valores vacíos ("")
-                .map(s -> s.trim().replaceAll(REGEX_SPECIAL_CHARS, REPLACEMENT)) // 3️⃣ Elimina caracteres especiales
-                .orElse(null); // 4️⃣  Si el valor original era null o vacío, devuelve null
+                .filter(Predicate.not(String::isEmpty)) // Filtra valores vacíos ("")
+                .map(s -> s.trim().replaceAll(REGEX_SPECIAL_CHARS, REPLACEMENT)) // Elimina caracteres especiales
+                .orElse(null); // devuelve null
 
     }
 

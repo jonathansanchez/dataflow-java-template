@@ -6,7 +6,6 @@ import com.verix.apm.infrastructure.repository.model.ApmTableSchema;
 import com.verix.apm.infrastructure.repository.model.BigQueryRepository;
 import com.verix.apm.infrastructure.streaming.ApacheBeamDataPipeline;
 import com.verix.apm.infrastructure.streaming.transformation.ApmToTableRow;
-import com.verix.apm.infrastructure.streaming.transformation.RemoveLineBreaksTransformation;
 import com.verix.apm.infrastructure.streaming.transformation.ReplaceCommasInQuotesFn;
 import com.verix.apm.infrastructure.streaming.transformation.StringToApmTransformation;
 
@@ -39,8 +38,6 @@ public final class DIContainer {
 
     public static void main(String[] args) {
         PipelineOptionsFactory.register(JobOptions.class);
-
-        DIContainer container = new DIContainer();
         JobOptions options = PipelineOptionsFactory
                 .fromArgs(args)
                 .withValidation()
@@ -50,17 +47,27 @@ public final class DIContainer {
         options.setOutputTable(System.getenv("GCP_TABLE"));
         options.setTempBucket(System.getenv("TEMP_LOCATION"));
 
+        // Pais
+        options.setCl(System.getenv("CL"));
+        options.setCca(System.getenv("CCA"));
+        options.setCo(System.getenv("CO"));
+        options.setMx(System.getenv("MX"));
+        options.setPe(System.getenv("PE"));
+        options.setUy(System.getenv("UY"));
+        options.setIb(System.getenv("IB"));
+
         printPipelineOptions(options);
+
+        DIContainer container = new DIContainer();
 
         container.register("job_options", options);
         container.register("table_schema", new TableSchema());
         container.register("apm_table_schema", new ApmTableSchema(container.resolve("table_schema")));
         container.register("big_query_repository", new BigQueryRepository(container.resolve("job_options"), container.resolve("apm_table_schema")));
         container.register("pipeline", Pipeline.create(container.resolve("job_options")));
-        //container.register("writer_service", new WriterService(container.resolve("big_query_repository")));
-        //container.register("remove_line_breaks_transformation", new RemoveLineBreaksTransformation());
         container.register("replace_commas_in_quotes_fn", new ReplaceCommasInQuotesFn());
         container.register("string_to_apm_transformation", new StringToApmTransformation());
+        //container.register("string_to_apm_transformation", new StringToApmTransformation(container.resolve("job_options")));
         container.register("apm_To_TableRow", new ApmToTableRow());
         container.register("apache_beam_pipeline", new ApacheBeamDataPipeline(container.resolve("job_options"), container.resolve("pipeline"),container.resolve("replace_commas_in_quotes_fn"), container.resolve("string_to_apm_transformation"),container.resolve("apm_To_TableRow"), container.resolve("big_query_repository")));
         container.register("streaming_service", new StreamingService(container.resolve("apache_beam_pipeline")));

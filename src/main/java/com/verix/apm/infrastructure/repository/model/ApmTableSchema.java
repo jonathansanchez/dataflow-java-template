@@ -38,7 +38,8 @@ public class ApmTableSchema {
                                 new TableFieldSchema().setName("vp").setType(STRING.name()),
                                 new TableFieldSchema().setName("svp").setType(STRING.name()),
                                 new TableFieldSchema().setName("portfolio_owner").setType(STRING.name()),
-                                new TableFieldSchema().setName("iso").setType(STRING.name())
+                                new TableFieldSchema().setName("iso").setType(STRING.name()),
+                                new TableFieldSchema().setName("country").setType(STRING.name())
                         )
                 );
     }
