@@ -11,6 +11,7 @@ public class Apm implements Serializable {
     private static final String REGEX_SPECIAL_CHARS = "[^a-zA-Z0-9\\s.,-@#$/]";
     private static final String REPLACEMENT = "";
 
+
     private final String apmCode;
     private final String apmName;
     private final Boolean isCompliant;
@@ -62,7 +63,7 @@ public class Apm implements Serializable {
         public String getIso() { return iso; }
     }*/
 
-        public Apm(String apmCode, String apmName, Boolean isCompliant, Boolean cia, String lcState, LifeDate productionDate, LifeDate retirementDate, String dbrRating, Boolean applicationTested, String applicationContact, String manager, String vp, String svp, String portfolioOwner, String iso) {
+        public Apm(String apmCode, String apmName, String isCompliant, String cia, String lcState, LifeDate productionDate, LifeDate retirementDate, String dbrRating, String applicationTested, String applicationContact, String manager, String vp, String svp, String portfolioOwner, String iso) {
         this.apmCode = setApmCode(apmCode);
         this.apmName = setApmName(apmName);
         this.isCompliant = setIsCompliant(isCompliant);
@@ -80,8 +81,8 @@ public class Apm implements Serializable {
         this.iso = setIso(iso);
     }
 
-    // Métodos Getters: permiten acceder a los atributos de la clase
-    // Los métodos setXX aplican una limpieza de caracteres especiales antes de la asignación en el constructor.
+
+    // Los métodos setXX aplican una limpieza antes de la asignación en el constructor.
     public String getApmCode() { return apmCode; }
     public String setApmCode(String apmCode){return removeSpecialCharsForRequired(apmCode);}
 
@@ -89,22 +90,24 @@ public class Apm implements Serializable {
     public String setApmName(String apmName){return removeSpecialCharsForOptional(apmName);}
 
     public Boolean getIsCompliant() { return isCompliant; }
-    public Boolean setIsCompliant(Boolean isCompliant){return BooleanCleaner(String.valueOf(isCompliant));}
+    public Boolean setIsCompliant(String isCompliant){return BooleanCleaner(isCompliant);}
 
     public Boolean getCia() { return cia; }
-    public Boolean setCia(Boolean cia){return BooleanCleaner(String.valueOf(cia));}
+    public Boolean setCia(String cia){return BooleanCleaner(cia);}
 
     public String getLcState() { return lcState; }
     public String setLcState(String lcState){return removeSpecialCharsForOptional(lcState);}
 
     public LifeDate getProductionDate() { return productionDate; }
+    //public LifeDate setProductionDate(LifeDate productionDate){return productionDate;}
+
     public LifeDate getRetirementDate() { return retirementDate; }
 
     public String getDbrRating() { return dbrRating; }
     public String setDbrRating(String dbrRating){return removeSpecialCharsForOptional(dbrRating);}
 
     public Boolean getApplicationTested() { return applicationTested; }
-    public Boolean setApplicationTested(Boolean applicationTested){return BooleanCleaner(String.valueOf(applicationTested));}
+    public Boolean setApplicationTested(String applicationTested){return BooleanCleaner(applicationTested);}
 
     public String getApplicationContact() { return applicationContact; }
     public String setApplicationContact(String applicationContact){return removeSpecialCharsForRequired(applicationContact);}
@@ -137,19 +140,24 @@ public class Apm implements Serializable {
     private String removeSpecialCharsForOptional(String value) {
         return Optional
                 .ofNullable(value)
-                .filter(Predicate.not(String::isEmpty))
-                .map(s ->
-                        s
-                                .trim()
-                                .replaceAll(REGEX_SPECIAL_CHARS, REPLACEMENT))
-                .orElse(REPLACEMENT);
+                .filter(Predicate.not(String::isEmpty)) // 2️⃣ Filtra valores vacíos ("")
+                .map(s -> s.trim().replaceAll(REGEX_SPECIAL_CHARS, REPLACEMENT)) // 3️⃣ Elimina caracteres especiales
+                .orElse(null); // 4️⃣  Si el valor original era null o vacío, devuelve null
 
     }
 
     private static Boolean BooleanCleaner(String value) {
-        if (value == null || value.trim().isEmpty()) {
-            return null;
-        }
-        return "YES".equalsIgnoreCase(value); //ignora mayus o minuscula
+        return Optional.ofNullable(value)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .map(s -> {
+                    String lowerCase = s.toLowerCase();
+                    return switch (lowerCase) {
+                        case "yes", "true" -> true;
+                        case "no", "false" -> false;
+                        default -> null;
+                    };
+                })
+                .orElse(null);
     }
 }

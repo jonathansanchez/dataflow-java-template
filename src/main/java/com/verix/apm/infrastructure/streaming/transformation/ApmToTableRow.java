@@ -11,21 +11,22 @@ public class ApmToTableRow extends DoFn<Apm, TableRow> {
     public void processElement(ProcessContext context) {
         Apm apm = context.element();
         TableRow row = new TableRow()
-                .set("apmCode", apm.getApmCode())
-                .set("apmName", apm.getApmName())
-                .set("isCompliant", apm.getIsCompliant())
+                .set("apm_code", apm.getApmCode())
+                .set("apm_name", apm.getApmName())
+                .set("is_compliant", apm.getIsCompliant())
                 .set("cia", apm.getCia())
-                .set("lcState", apm.getLcState())
-                .set("productionDate", apm.getProductionDate().getValue())
-                .set("retirementDate", apm.getRetirementDate().getValue())
-                .set("dbrRating", apm.getDbrRating())
-                .set("applicationTested", apm.getApplicationTested())
-                .set("applicationContact", apm.getApplicationContact())
+                .set("lc_state", apm.getLcState())
+                .set("production_date", apm.getProductionDate().getValue())
+                .set("retirement_date", apm.getRetirementDate().getValue())
+                .set("dbr_rating", apm.getDbrRating())
+                .set("application_tested", apm.getApplicationTested())
+                .set("application_contact", apm.getApplicationContact())
                 .set("manager", apm.getManager())
                 .set("vp", apm.getVp())
                 .set("svp", apm.getSvp())
-                .set("portfolioOwner", apm.getPortfolioOwner())
+                .set("portfolio_owner", apm.getPortfolioOwner())
                 .set("iso",apm.getIso());
         context.output(row);
+        System.out.println("Datos preparados: " + row.toString());
     }
 }

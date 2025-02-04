@@ -20,12 +20,21 @@ public class BigQueryRepository {
     }
 
     public BigQueryIO.Write<@UnknownKeyFor @NonNull @Initialized TableRow> writeToBigQuery() {
-        return BigQueryIO.writeTableRows()
-                .to(options.getOutputTable())
-                .withSchema(apmTableSchema.create())
-                .withCustomGcsTempLocation(ValueProvider.StaticValueProvider.of(options.getTempBucket()))
-                .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
-                .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE)
-                .withMethod(BigQueryIO.Write.Method.STORAGE_WRITE_API);
+        try {
+            BigQueryIO.Write<@UnknownKeyFor @NonNull @Initialized TableRow> writeOperation = BigQueryIO.writeTableRows()
+                    .to(options.getOutputTable())
+                    .withSchema(apmTableSchema.create())
+                    .withCustomGcsTempLocation(ValueProvider.StaticValueProvider.of(options.getTempBucket()))
+                    .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
+                    .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE); // WRITE_APPEND - WRITE_TRUNCATE
+                    //.withMethod(BigQueryIO.Write.Method.STORAGE_WRITE_API);
+
+            System.out.println("Datos insertados correctamente en BigQuery.");
+
+            return writeOperation;
+        } catch (Exception e) {
+            System.err.println("Error al insertar los datos en BigQuery: " + e.getMessage());
+            throw new RuntimeException("Error al insertar los datos en BigQuery", e);
+        }
     }
 }

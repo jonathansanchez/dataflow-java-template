@@ -7,6 +7,7 @@ import com.verix.apm.infrastructure.repository.model.BigQueryRepository;
 import com.verix.apm.infrastructure.streaming.ApacheBeamDataPipeline;
 import com.verix.apm.infrastructure.streaming.transformation.ApmToTableRow;
 import com.verix.apm.infrastructure.streaming.transformation.RemoveLineBreaksTransformation;
+import com.verix.apm.infrastructure.streaming.transformation.ReplaceCommasInQuotesFn;
 import com.verix.apm.infrastructure.streaming.transformation.StringToApmTransformation;
 
 import org.apache.beam.sdk.Pipeline;
@@ -49,6 +50,8 @@ public final class DIContainer {
         options.setOutputTable(System.getenv("GCP_TABLE"));
         options.setTempBucket(System.getenv("TEMP_LOCATION"));
 
+        printPipelineOptions(options);
+
         container.register("job_options", options);
         container.register("table_schema", new TableSchema());
         container.register("apm_table_schema", new ApmTableSchema(container.resolve("table_schema")));
@@ -56,14 +59,21 @@ public final class DIContainer {
         container.register("pipeline", Pipeline.create(container.resolve("job_options")));
         //container.register("writer_service", new WriterService(container.resolve("big_query_repository")));
         //container.register("remove_line_breaks_transformation", new RemoveLineBreaksTransformation());
+        container.register("replace_commas_in_quotes_fn", new ReplaceCommasInQuotesFn());
         container.register("string_to_apm_transformation", new StringToApmTransformation());
         container.register("apm_To_TableRow", new ApmToTableRow());
-        container.register("apache_beam_pipeline", new ApacheBeamDataPipeline(container.resolve("job_options"), container.resolve("pipeline"), container.resolve("string_to_apm_transformation"),container.resolve("apm_To_TableRow"), container.resolve("big_query_repository")));
+        container.register("apache_beam_pipeline", new ApacheBeamDataPipeline(container.resolve("job_options"), container.resolve("pipeline"),container.resolve("replace_commas_in_quotes_fn"), container.resolve("string_to_apm_transformation"),container.resolve("apm_To_TableRow"), container.resolve("big_query_repository")));
         container.register("streaming_service", new StreamingService(container.resolve("apache_beam_pipeline")));
 
         //Init
         StreamingService streamingService = container.resolve("streaming_service");
         streamingService.execute();
+    }
+
+    private static void  printPipelineOptions(JobOptions options) {
+        System.out.println("Input: " + options.getInput());
+        System.out.println("OutputTable: " + options.getOutputTable());
+        System.out.println("TempBucket: " + options.getTempBucket());
     }
 }
 

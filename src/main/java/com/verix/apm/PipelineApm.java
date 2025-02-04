@@ -185,9 +185,9 @@ public class PipelineApm {
             // Extraer el valor de la columna
             String value = matcher.group(1) != null ? matcher.group(1) : matcher.group(2);
 
-            if (value.equals("BJRC")){
+/*            if (value.equals("BJRC")){
                 value=value;
-            }
+            }*/
 
             if (value.trim().isEmpty()) {
                 columns.add(null);

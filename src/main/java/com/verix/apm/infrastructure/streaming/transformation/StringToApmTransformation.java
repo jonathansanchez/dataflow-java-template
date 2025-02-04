@@ -18,27 +18,46 @@ public class StringToApmTransformation extends DoFn<String, Apm> {
 
     @ProcessElement
     public void processElement(@Element String line, OutputReceiver<Apm> out) {
+        //System.out.println("Line: " + line);
+
         List<String> splitValue = Optional
-                .ofNullable(line)
-                .map(s -> Arrays.asList(s.trim().split(COMMA)))
-                .orElseThrow(RuntimeException::new);
+                .ofNullable(line) // Evita errores si la línea es null
+                .map(s -> Arrays.asList(s.trim().split(COMMA))) // Separa por comas
+                .orElseThrow(RuntimeException::new); // Si la línea es null, lanza excepción
+
+        //System.out.println("Split Values: " + splitValue);
+
+/*        // Imprimir valores después de conversión
+        System.out.println("✅ Valores convertidos:");
+        System.out.println(" - isCompliant: " + BooleanCleaner.parseBoolean(splitValue.get(2)));
+        System.out.println(" - cia: " + BooleanCleaner.parseBoolean(splitValue.get(3)));
+        System.out.println(" - applicationTested: " + BooleanCleaner.parseBoolean(splitValue.get(8)));*/
 
         out.output(new Apm(
-                splitValue.get(0),
-                splitValue.get(1),
-                BooleanCleaner.parseBoolean(splitValue.get(2)),  // isCompliant
-                BooleanCleaner.parseBoolean(splitValue.get(3)),  // cia
-                splitValue.get(4),
-                LifeDate.create(splitValue.get(5)),
-                LifeDate.create(splitValue.get(6)),
-                splitValue.get(7),
-                BooleanCleaner.parseBoolean(splitValue.get(8)),  // applicationTested
-                splitValue.get(9),
-                splitValue.get(10),
-                splitValue.get(11),
-                splitValue.get(12),
-                splitValue.get(13),
-                splitValue.get(14))
+                splitValue.get(0), //apmCode
+                nullIfEmpty(splitValue.get(1).toUpperCase()), //apmName
+                splitValue.get(2),  // isCompliant
+                splitValue.get(3),  // cia
+                nullIfEmpty(splitValue.get(4)), // lcState
+                LifeDate.create(splitValue.get(5)), // productionDate
+                LifeDate.create(splitValue.get(6)), // retirementDate
+                splitValue.get(7), // dbrRating
+                splitValue.get(8),  // applicationTested
+                splitValue.get(9), // applicationContact
+                nullIfEmpty(splitValue.get(10)), // manager
+                nullIfEmpty(splitValue.get(11)), // vp
+                nullIfEmpty(splitValue.get(12)), // svp
+                nullIfEmpty(splitValue.get(13)), // portfolioOwner
+                nullIfEmpty(splitValue.get(14))  // iso
+                )
         );
+    }
+
+    private String nullIfEmpty(String value) {
+        return (value == null // 1️⃣ Si el valor es nulo
+                || value.trim().isEmpty() // 2️⃣ Si el valor es una cadena vacía o solo contiene espacios en blanco
+                || "null".equalsIgnoreCase(value.trim())) // 3️⃣ Si el valor es la palabra "null" (sin importar mayúsculas o minúsculas)
+                ? null // ✅ Devuelve `null` en estos casos
+                : value; // 🚀 Si no, devuelve el mismo valor original
     }
 }

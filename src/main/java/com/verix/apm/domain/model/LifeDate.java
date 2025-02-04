@@ -5,11 +5,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 public class LifeDate implements Serializable {
-    private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("dd-MMM-yyyy", Locale.ENGLISH);
+
+    private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("dd-MMM-yyyy", Locale.ROOT);
     private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    // elimina todo excepto letras, numeros y guiones
+    private static final String REGEX_CLEANUP = "[^a-zA-Z0-9-]";
 
     private final String value;
 
@@ -17,21 +20,26 @@ public class LifeDate implements Serializable {
         this.value = value;
     }
 
-    //Llama a extractDate(value) para limpiar y formatear la fecha antes de guardarla.
     public static LifeDate create(String value) {
         return new LifeDate(extractDate(value));
     }
 
     private static String extractDate(String value) {
-        return Optional.ofNullable(value)
-                .filter(Predicate.not(String::isEmpty))
-                .map(s -> LocalDate.parse(s.trim(), INPUT_FORMAT).format(OUTPUT_FORMAT)) // Devuelve formato yyyy-MM-dd
-                .orElse(null);
+        try {
+            return Optional.ofNullable(value)
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .map(s -> s.replaceAll(REGEX_CLEANUP, ""))
+                    .filter(s -> !s.isEmpty()) // Si después de limpiar queda vacío, devuelve null
+                    .map(s -> LocalDate.parse(s, INPUT_FORMAT).format(OUTPUT_FORMAT))
+                    .orElse(null);
+        } catch (Exception e) {
+            System.out.println("Error al convertir la fecha: " + value);
+            return null;
+        }
     }
 
-    //Devuelve la fecha formateada
     public String getValue() {
         return value;
     }
 }
-
