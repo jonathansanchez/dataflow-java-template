@@ -1,4 +1,4 @@
-package com.verix.sam.infrastructure.streaming.transformation;
+package com.verix.forecast.infrastructure.streaming.transformation;
 
 import org.apache.beam.sdk.transforms.DoFn;
 
