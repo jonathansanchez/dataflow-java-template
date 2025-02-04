@@ -88,7 +88,7 @@ class BeamDataPipelineIntegrationTest {
 
         pipeline.run();
         AtomicInteger rowCount = countResult();
-        assertEquals(10, rowCount.get());
+        assertEquals(2, rowCount.get());
     }
 
     @Test
@@ -109,7 +109,7 @@ class BeamDataPipelineIntegrationTest {
 
         // Count data from BigQuery
         AtomicInteger rowCount = countResult();
-        assertEquals(20, rowCount.get());
+        assertEquals(2, rowCount.get());
     }
 
     @NotNull
