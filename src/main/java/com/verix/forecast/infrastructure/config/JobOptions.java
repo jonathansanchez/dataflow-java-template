@@ -1,4 +1,4 @@
-package com.verix.sam.infrastructure.config;
+package com.verix.forecast.infrastructure.config;
 
 import org.apache.beam.sdk.options.Description;
 import org.apache.beam.sdk.options.PipelineOptions;
