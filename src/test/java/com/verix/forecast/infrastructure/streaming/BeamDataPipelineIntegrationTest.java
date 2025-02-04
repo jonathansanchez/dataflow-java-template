@@ -1,15 +1,15 @@
-package com.verix.sam.infrastructure.streaming;
+package com.verix.forecast.infrastructure.streaming;
 
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
 import com.google.cloud.bigquery.*;
-import com.verix.sam.domain.model.Sam;
-import com.verix.sam.infrastructure.config.JobOptions;
-import com.verix.sam.infrastructure.repository.BigQueryRepository;
-import com.verix.sam.infrastructure.repository.model.SamTableSchema;
-import com.verix.sam.infrastructure.streaming.transformation.RemoveLineBreaksTransformation;
-import com.verix.sam.infrastructure.streaming.transformation.SamToTableRow;
-import com.verix.sam.infrastructure.streaming.transformation.StringToSamTransformation;
+import com.verix.forecast.domain.model.Remediation;
+import com.verix.forecast.infrastructure.config.JobOptions;
+import com.verix.forecast.infrastructure.repository.BigQueryRepository;
+import com.verix.forecast.infrastructure.repository.model.RemediationTableSchema;
+import com.verix.forecast.infrastructure.streaming.transformation.RemediationToTableRow;
+import com.verix.forecast.infrastructure.streaming.transformation.RemoveLineBreaksTransformation;
+import com.verix.forecast.infrastructure.streaming.transformation.StringToRemediationTransformation;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ApacheBeamDataPipelineIntegrationTest {
+class BeamDataPipelineIntegrationTest {
 
     private static final String PROJECT_ID      = "PROJECT_ID";
     private static final String BUCKET_NAME     = "BUCKET_NAME";
@@ -38,21 +38,21 @@ class ApacheBeamDataPipelineIntegrationTest {
     private static JobOptions options;
     private static BigQuery bigQuery;
     private static RemoveLineBreaksTransformation removeLineBreaksTransformation;
-    private static StringToSamTransformation stringToSamTransformation;
-    private static SamToTableRow samToTableRow;
-    private static SamTableSchema samTableSchema;
+    private static StringToRemediationTransformation stringToRemediationTransformation;
+    private static RemediationToTableRow remediationToTableRow;
+    private static RemediationTableSchema remediationTableSchema;
     private static BigQueryRepository bigQueryRepository;
 
     @BeforeAll
     public static void setUp() throws IOException {
         PipelineOptionsFactory.register(JobOptions.class);
-        options                         = PipelineOptionsFactory.as(JobOptions.class);
-        bigQuery                        = BigQueryOptions.getDefaultInstance().getService();
-        removeLineBreaksTransformation  = new RemoveLineBreaksTransformation();
-        stringToSamTransformation       = new StringToSamTransformation();
-        samToTableRow                   = new SamToTableRow();
-        samTableSchema                  = new SamTableSchema(new TableSchema());
-        bigQueryRepository              = new BigQueryRepository(options, samTableSchema);
+        options                             = PipelineOptionsFactory.as(JobOptions.class);
+        bigQuery                            = BigQueryOptions.getDefaultInstance().getService();
+        removeLineBreaksTransformation      = new RemoveLineBreaksTransformation();
+        stringToRemediationTransformation   = new StringToRemediationTransformation();
+        remediationToTableRow               = new RemediationToTableRow();
+        remediationTableSchema              = new RemediationTableSchema(new TableSchema());
+        bigQueryRepository                  = new BigQueryRepository(options, remediationTableSchema);
 
         options.setTempLocation(TEMP_LOCATION);
         options.setInput(INPUT_FILE);
@@ -64,20 +64,13 @@ class ApacheBeamDataPipelineIntegrationTest {
         // Create a new table in BigQuery
         TableId tableId = TableId.of(PROJECT_ID, DATASET_NAME, TABLE_NAME);
         Schema schema = Schema.of(
-                Field.of("publisher", StandardSQLTypeName.STRING),
-                Field.of("category", StandardSQLTypeName.STRING),
-                Field.of("product", StandardSQLTypeName.STRING),
-                Field.of("product_version", StandardSQLTypeName.STRING),
+                Field.of("strategy", StandardSQLTypeName.STRING),
+                Field.of("apm_code", StandardSQLTypeName.STRING),
+                Field.of("component", StandardSQLTypeName.STRING),
                 Field.of("version", StandardSQLTypeName.STRING),
-                Field.of("full_version", StandardSQLTypeName.STRING),
-                Field.of("edition", StandardSQLTypeName.STRING),
-                Field.of("internal_availability", StandardSQLTypeName.DATE),
-                Field.of("internal_end_of_support", StandardSQLTypeName.DATE),
-                Field.of("publisher_availability", StandardSQLTypeName.DATE),
-                Field.of("publisher_end_of_support", StandardSQLTypeName.DATE),
-                Field.of("publisher_end_of_extended_support", StandardSQLTypeName.DATE),
-                Field.of("publisher_end_of_life", StandardSQLTypeName.DATE),
-                Field.of("source", StandardSQLTypeName.STRING)
+                Field.of("action", StandardSQLTypeName.STRING),
+                Field.of("new_version", StandardSQLTypeName.STRING),
+                Field.of("delivery_date", StandardSQLTypeName.DATE)
         );
         TableDefinition tableDefinition = StandardTableDefinition.of(schema);
         TableInfo tableInfo = TableInfo.newBuilder(tableId, tableDefinition).build();
@@ -86,12 +79,12 @@ class ApacheBeamDataPipelineIntegrationTest {
 
     @Test
     void run() {
-        ApacheBeamDataPipeline pipeline = new ApacheBeamDataPipeline(options,
+        BeamDataPipeline pipeline = new BeamDataPipeline(options,
                 Pipeline.create(options),
                 bigQueryRepository,
                 removeLineBreaksTransformation,
-                stringToSamTransformation,
-                samToTableRow);
+                stringToRemediationTransformation,
+                remediationToTableRow);
 
         pipeline.run();
         AtomicInteger rowCount = countResult();
@@ -106,11 +99,11 @@ class ApacheBeamDataPipelineIntegrationTest {
 
         PCollection<String> cleanedLines = rawData.apply("Transform: Sanitization line breaks", ParDo.of(removeLineBreaksTransformation));
 
-        PCollection<Sam> samList = cleanedLines.apply("Transform: Format from String to SAM Class and fields", ParDo.of(stringToSamTransformation));
+        PCollection<Remediation> remediationList = cleanedLines.apply("Transform: Format from String to Remediation Class and fields", ParDo.of(stringToRemediationTransformation));
 
-        PCollection<TableRow> tableRows = samList.apply("Transform: Format from SAM Class to Table Row Class", ParDo.of(samToTableRow));
+        PCollection<TableRow> tableRows = remediationList.apply("Transform: Format from Remediation Class to Table Row Class", ParDo.of(remediationToTableRow));
 
-        tableRows.apply("Load: Write SAM into BigQuery", bigQueryRepository.writeToBigQuery());
+        tableRows.apply("Load: Write Remediation into BigQuery", bigQueryRepository.writeToBigQuery());
 
         pipeline.run().waitUntilFinish();
 

@@ -1,4 +1,4 @@
-package com.verix.sam;
+package com.verix.forecast;
 
 class ApplicationTests {
 
