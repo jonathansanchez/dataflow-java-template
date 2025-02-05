@@ -8,8 +8,12 @@ import java.util.function.Predicate;
 
 //Atributos/Priopiedades
 public class Apm implements Serializable {
-    private static final String REGEX_SPECIAL_CHARS = "[^a-zA-Z0-9\\s.,-@#$/]";
+    //private static final String REGEX_SPECIAL_CHARS = "[^a-zA-Z0-9\\s.,-@#$/]";
+    //private static final String REGEX_SPECIAL_CHARS = "[^a-zA-Z0-9\\s.,-@#$/áéíóúÁÉÍÓÚñÑ]";
+    //private static final String REGEX_SPECIAL_CHARS = "[^a-zA-Z0-9\\s(),.-@#$/áéíóúÁÉÍÓÚñÑ]";
+    private static final String REGEX_SPECIAL_CHARS = "[^a-zA-Z0-9\\s(),.-@#$/áéíóúÁÉÍÓÚñÑ_]";
     private static final String REPLACEMENT = "";
+    private static final String EMPTY_REPLACEMENT = " ";
 
 
     private final String apmCode;
@@ -138,15 +142,23 @@ public class Apm implements Serializable {
                 .ofNullable(value)
                 .orElseThrow(InvalidPropertyException::thrown)
                 .trim()
-                .replaceAll(REGEX_SPECIAL_CHARS, REPLACEMENT);
+                .replaceAll(REGEX_SPECIAL_CHARS, REPLACEMENT)
+                .replaceAll("-", EMPTY_REPLACEMENT)
+                .replaceAll("_", EMPTY_REPLACEMENT)
+                .replaceAll(",", REPLACEMENT);
     }
 
     private String removeSpecialCharsForOptional(String value) {
         return Optional
                 .ofNullable(value)
                 .filter(Predicate.not(String::isEmpty)) // Filtra valores vacíos ("")
-                .map(s -> s.trim().replaceAll(REGEX_SPECIAL_CHARS, REPLACEMENT)) // Elimina caracteres especiales
-                .orElse(null); // devuelve null
+                .map(s -> s.trim()
+                        .replaceAll(REGEX_SPECIAL_CHARS, REPLACEMENT)
+                        .replaceAll("_", EMPTY_REPLACEMENT)
+                        .replaceAll("-", EMPTY_REPLACEMENT)
+                        .replaceAll(",", REPLACEMENT))
+                .filter(s -> !s.equalsIgnoreCase("NULL"))
+                .orElse(null);
 
     }
 

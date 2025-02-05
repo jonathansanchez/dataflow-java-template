@@ -28,7 +28,7 @@ public class ApmToTableRow extends DoFn<Apm, TableRow> {
                 .set("iso",apm.getIso())
                 .set("country",apm.getCountry());
         context.output(row);
-        //System.out.println("Datos preparados: " + row.toString());
+        System.out.println("Datos preparados: " + row.toString());
     }
 
 /*    private String obtenerPais(String portfolioOwner) {

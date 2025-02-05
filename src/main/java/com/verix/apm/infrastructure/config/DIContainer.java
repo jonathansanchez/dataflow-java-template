@@ -6,6 +6,7 @@ import com.verix.apm.infrastructure.repository.model.ApmTableSchema;
 import com.verix.apm.infrastructure.repository.model.BigQueryRepository;
 import com.verix.apm.infrastructure.streaming.ApacheBeamDataPipeline;
 import com.verix.apm.infrastructure.streaming.transformation.ApmToTableRow;
+import com.verix.apm.infrastructure.streaming.transformation.FilterEmptyRowsFn;
 import com.verix.apm.infrastructure.streaming.transformation.ReplaceCommasInQuotesFn;
 import com.verix.apm.infrastructure.streaming.transformation.StringToApmTransformation;
 
@@ -16,12 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-/*
-- contenedor de inyección de dependencias (DI)
-- centraliza y gestiona todas las dependencias de la aplicación.
-- metodo register: Registra instancias
-- metodo resolve: Recupera instancias
- */
 public final class DIContainer {
 
     private final Map<String, Object> instances = new HashMap<>();
@@ -65,11 +60,11 @@ public final class DIContainer {
         container.register("apm_table_schema", new ApmTableSchema(container.resolve("table_schema")));
         container.register("big_query_repository", new BigQueryRepository(container.resolve("job_options"), container.resolve("apm_table_schema")));
         container.register("pipeline", Pipeline.create(container.resolve("job_options")));
+        container.register("filter_empty_rows_fn", new FilterEmptyRowsFn());
         container.register("replace_commas_in_quotes_fn", new ReplaceCommasInQuotesFn());
         container.register("string_to_apm_transformation", new StringToApmTransformation());
-        //container.register("string_to_apm_transformation", new StringToApmTransformation(container.resolve("job_options")));
         container.register("apm_To_TableRow", new ApmToTableRow());
-        container.register("apache_beam_pipeline", new ApacheBeamDataPipeline(container.resolve("job_options"), container.resolve("pipeline"),container.resolve("replace_commas_in_quotes_fn"), container.resolve("string_to_apm_transformation"),container.resolve("apm_To_TableRow"), container.resolve("big_query_repository")));
+        container.register("apache_beam_pipeline", new ApacheBeamDataPipeline(container.resolve("job_options"), container.resolve("pipeline"),container.resolve("filter_empty_rows_fn"), container.resolve("replace_commas_in_quotes_fn"), container.resolve("string_to_apm_transformation"),container.resolve("apm_To_TableRow"), container.resolve("big_query_repository")));
         container.register("streaming_service", new StreamingService(container.resolve("apache_beam_pipeline")));
 
         //Init

@@ -7,6 +7,7 @@ import org.apache.beam.sdk.transforms.DoFn;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class StringToApmTransformation extends DoFn<String, Apm> {
@@ -25,12 +26,6 @@ public class StringToApmTransformation extends DoFn<String, Apm> {
         String portfolioOwner = splitValue.get(13);
         String pais = obtenerPais(options, portfolioOwner);
 
-
-/*        // Imprimir valores después de conversión
-        System.out.println("✅ Valores convertidos:");
-        System.out.println(" - isCompliant: " + BooleanCleaner.parseBoolean(splitValue.get(2)));
-        System.out.println(" - cia: " + BooleanCleaner.parseBoolean(splitValue.get(3)));
-        System.out.println(" - applicationTested: " + BooleanCleaner.parseBoolean(splitValue.get(8)));*/
 
         out.output(new Apm(
                         splitValue.get(0), //apmCode
@@ -54,21 +49,17 @@ public class StringToApmTransformation extends DoFn<String, Apm> {
     }
 
     private static String obtenerPais(JobOptions options, String portfolioOwner) {
-        if (options.getCl() != null && options.getCl().equalsIgnoreCase(portfolioOwner)) {
-            return "CL";
-        } else if (options.getCo() != null && options.getCo().equalsIgnoreCase(portfolioOwner)) {
-            return "CO";
-        } else if (options.getCca() != null && options.getCca().equalsIgnoreCase(portfolioOwner)) {
-            return "CCA";
-        } else if (options.getMx() != null && options.getMx().equalsIgnoreCase(portfolioOwner)) {
-            return "MX";
-        } else if (options.getPe() != null && options.getPe().equalsIgnoreCase(portfolioOwner)) {
-            return "PE";
-        } else if (options.getUy() != null && options.getUy().equalsIgnoreCase(portfolioOwner)) {
-            return "UY";
-        } else if (options.getIb() != null && options.getIb().equalsIgnoreCase(portfolioOwner)) {
-            return "IB";
-        }
-        return null;  // Retorna null si no se encuentra un país válido
+        Map<String, String> countryMap = Map.of(
+                options.getCl(), "CL",
+                options.getCo(), "CO",
+                options.getCca(), "CCA",
+                options.getMx(), "MX",
+                options.getPe(), "PE",
+                options.getUy(), "UY",
+                options.getIb(), "IB"
+        );
+
+        // Buscar el país correspondiente
+        return countryMap.getOrDefault(portfolioOwner, null);
     }
 }

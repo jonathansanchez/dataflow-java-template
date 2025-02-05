@@ -9,16 +9,13 @@ public class ReplaceCommasInQuotesFn extends DoFn<String, String> {
 
     private static final String COMMA = ",";
     private static final String REPLACEMENT_CHAR = " +";
-    private static final String QUOTED_PATTERN = "\"([^\"]*)\""; // Expresión regular para encontrar contenido dentro de comillas
+    private static final String QUOTED_PATTERN = "\"([^\"]*)\"";
     private static final String EMPTY_STRING = "";
 
     @ProcessElement
     public void processElement(@Element String line, OutputReceiver<String> out) {
-        // Verificar y procesar la línea para reemplazar comas dentro de comillas y celdas vacías
         String processedLine = replaceCommasInsideQuotes(line);
-        processedLine = replaceEmptyCellsWithNull(processedLine); // Reemplazar celdas vacías por null
-
-        // Emitir la línea procesada
+        processedLine = replaceEmptyCellsWithNull(processedLine);
         out.output(processedLine);
     }
 
@@ -29,16 +26,14 @@ public class ReplaceCommasInQuotesFn extends DoFn<String, String> {
             Matcher matcher = Pattern.compile(QUOTED_PATTERN).matcher(line);
             StringBuffer result = new StringBuffer();
 
-            // Reemplazamos las comas dentro de las comillas por "+"
             while (matcher.find()) {
-                String quotedValue = matcher.group(1); // Valor dentro de las comillas
-                quotedValue = quotedValue.replace(COMMA, REPLACEMENT_CHAR); // Reemplazamos las comas por "+"
-                matcher.appendReplacement(result, Matcher.quoteReplacement(quotedValue));  // Eliminamos las comillas dobles
+                String quotedValue = matcher.group(1);
+                quotedValue = quotedValue.replace(COMMA, REPLACEMENT_CHAR);
+                matcher.appendReplacement(result, Matcher.quoteReplacement(quotedValue));
             }
             matcher.appendTail(result);
             return result.toString();
         } else {
-            // Si no hay comillas dobles, devolvemos la línea tal cual
             return line;
         }
     }
@@ -47,14 +42,11 @@ public class ReplaceCommasInQuotesFn extends DoFn<String, String> {
     private String replaceEmptyCellsWithNull(String line) {
         String[] columns = line.split(COMMA);
 
-        // Reemplazar las celdas vacías por "null"
         for (int i = 0; i < columns.length; i++) {
             if (columns[i].trim().isEmpty()) {
-                columns[i] = "null";  // Puedes usar null o cualquier otro valor que consideres adecuado
+                columns[i] = "null";
             }
         }
-
-        // Reconstruir la línea con las celdas vacías reemplazadas
         return String.join(COMMA, columns);
     }
 }
