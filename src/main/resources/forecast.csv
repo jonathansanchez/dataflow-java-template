@@ -1,0 +1,3 @@
+Strategy,APM,Component,Version,Action,New_Version,Delivery_Date
+SIPFY25,BDQ4,SQL Server Integration Services,SQL Server Integration Services 2014 Standard 12.0.2456.0,update,SQL Server Integration Services 2022 Standard,2025-10-31
+SIPFY25,BGLK,SQL Server 2014 Standard,SQL Server 2014 Standard 2014,update,SQL Server Integration Services 2022 Standard Service Pack 3,2025-10-31
