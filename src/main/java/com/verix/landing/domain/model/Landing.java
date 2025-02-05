@@ -14,7 +14,7 @@ public class Landing implements Serializable {
     private static final DateTimeFormatter INPUT_DATE_FORMAT = DateTimeFormatter.ofPattern("MM/dd/yyyy").withLocale(Locale.ROOT);
     private static final DateTimeFormatter OUTPUT_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd").withLocale(Locale.ROOT);
     private static final String EMPTY_STRING = "";
-    private static final String REGEX_SPECIAL_CHARS = "[^a-zA-Z0-9\\s._,-@#$/]";
+    private static final String REGEX_SPECIAL_CHARS = "[^a-zA-Z0-9\\s._,-@#$/()&áéíóúñüÁÉÍÓÚÑÜ]";
     private static final String YES = "yes";
     private static final String NO = "no";
     private static final String TRUE = "true";
@@ -365,10 +365,9 @@ public class Landing implements Serializable {
 
     private String parseDate(String date){
         return Optional
-                .ofNullable(date)
+                .ofNullable(removeSpecialCharsForOptional(date))
                 .filter(Predicate.not(String::isEmpty))
                 .map(s -> {
-
                     LocalDate formattedDate = LocalDate.parse(s.trim(), INPUT_DATE_FORMAT);
                     return formattedDate.format(OUTPUT_DATE_FORMAT);
                 }).
