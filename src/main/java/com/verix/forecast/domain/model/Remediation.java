@@ -73,7 +73,7 @@ public class Remediation implements Serializable {
     }
 
     private String setNewVersion(String newVersion) {
-        return removeSpecialCharsForRequired(newVersion);
+        return removeSpecialCharsForOptional(newVersion);
     }
 
     public DeliveryDate getDeliveryDate() {
@@ -97,5 +97,18 @@ public class Remediation implements Serializable {
         }
 
         return optionalValue;
+    }
+
+    private String removeSpecialCharsForOptional(String value) {
+        return Optional
+                .ofNullable(value)
+                .filter(Predicate.not(String::isEmpty))
+                .map(s ->
+                        s
+                                .trim()
+                                .replaceAll(REGEX_SPECIAL_CHARS, REPLACEMENT))
+                .filter(Predicate.not(String::isEmpty))
+                .orElse(null);
+
     }
 }

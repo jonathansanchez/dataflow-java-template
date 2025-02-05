@@ -41,8 +41,7 @@ public class RemediationTableSchema {
                                         .setMode("REQUIRED"),
                                 new TableFieldSchema()
                                         .setName("new_version")
-                                        .setType(STRING.name())
-                                        .setMode("REQUIRED"),
+                                        .setType(STRING.name()),
                                 new TableFieldSchema()
                                         .setName("delivery_date")
                                         .setType(DATE.name())

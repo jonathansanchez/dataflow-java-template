@@ -69,7 +69,7 @@ class BeamDataPipelineIntegrationTest {
                 Field.of("component", StandardSQLTypeName.STRING),
                 Field.of("version", StandardSQLTypeName.STRING),
                 Field.of("action", StandardSQLTypeName.STRING),
-                Field.of("new_version", StandardSQLTypeName.STRING),
+                Field.newBuilder("new_version", StandardSQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build(),
                 Field.of("delivery_date", StandardSQLTypeName.DATE)
         );
         TableDefinition tableDefinition = StandardTableDefinition.of(schema);
@@ -88,7 +88,7 @@ class BeamDataPipelineIntegrationTest {
 
         pipeline.run();
         AtomicInteger rowCount = countResult();
-        assertEquals(2, rowCount.get());
+        assertEquals(10, rowCount.get());
     }
 
     @Test
@@ -96,6 +96,7 @@ class BeamDataPipelineIntegrationTest {
         Pipeline pipeline = Pipeline.create(options);
 
         PCollection<String> rawData = pipeline.apply("Extract: Read CSV File", TextIO.read().withSkipHeaderLines(1).from(options.getInput()));
+        //PCollection<String> rawData = pipeline.apply("Extract: Read CSV File", TextIO.read().withSkipHeaderLines(1).from("src/main/resources/forecast.csv"));
 
         PCollection<String> cleanedLines = rawData.apply("Transform: Sanitization line breaks", ParDo.of(removeLineBreaksTransformation));
 
@@ -109,7 +110,7 @@ class BeamDataPipelineIntegrationTest {
 
         // Count data from BigQuery
         AtomicInteger rowCount = countResult();
-        assertEquals(2, rowCount.get());
+        assertEquals(10, rowCount.get());
     }
 
     @NotNull

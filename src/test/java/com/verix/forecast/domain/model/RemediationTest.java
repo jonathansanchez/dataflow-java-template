@@ -63,6 +63,102 @@ class RemediationTest {
     }
 
     @Test
+    void Given_a_valid_data_with_empty_new_version_When_try_to_create_Then_create_a_valid_remediation() {
+        //Arrange
+        String strategy = "SIPFY25";
+        String apmCode = "BDQ4";
+        String component = "SQL Server Integration Services";
+        String version = "SQL Server Integration Services 2014 Standard 12.0.2456.0";
+        String action = "remove";
+        String newVersion = "";
+        String deliveryDate = "2025-10-31";
+
+        //Act
+        Remediation remediation = new Remediation(strategy,
+                apmCode,
+                component,
+                version,
+                Action.create(action),
+                newVersion,
+                DeliveryDate.create(deliveryDate));
+
+        //Assert
+        assertNotNull(remediation.getStrategy());
+        assertNotEquals(EMPTY_STRING, remediation.getStrategy());
+        assertEquals(strategy, remediation.getStrategy());
+
+        assertNotNull(remediation.getApmCode());
+        assertNotEquals(EMPTY_STRING, remediation.getApmCode());
+        assertEquals(apmCode, remediation.getApmCode());
+
+        assertNotNull(remediation.getComponent());
+        assertNotEquals(EMPTY_STRING, remediation.getComponent());
+        assertEquals(component, remediation.getComponent());
+
+        assertNotNull(remediation.getVersion());
+        assertNotEquals(EMPTY_STRING, remediation.getVersion());
+        assertEquals(version, remediation.getVersion());
+
+        assertNotNull(remediation.getAction().getValue());
+        assertNotEquals(EMPTY_STRING, remediation.getAction().getValue());
+        assertEquals(action.toUpperCase(), remediation.getAction().getValue());
+
+        assertNull(remediation.getNewVersion());
+
+        assertNotNull(remediation.getDeliveryDate().getValue());
+        assertNotEquals(EMPTY_STRING, remediation.getDeliveryDate().getValue());
+        assertEquals(deliveryDate, remediation.getDeliveryDate().getValue());
+    }
+
+    @Test
+    void Given_a_valid_data_with_null_new_version_When_try_to_create_Then_create_a_valid_remediation() {
+        //Arrange
+        String strategy = "SIPFY25";
+        String apmCode = "BDQ4";
+        String component = "SQL Server Integration Services";
+        String version = "SQL Server Integration Services 2014 Standard 12.0.2456.0";
+        String action = "remove";
+        String newVersion = null;
+        String deliveryDate = "2025-10-31";
+
+        //Act
+        Remediation remediation = new Remediation(strategy,
+                apmCode,
+                component,
+                version,
+                Action.create(action),
+                newVersion,
+                DeliveryDate.create(deliveryDate));
+
+        //Assert
+        assertNotNull(remediation.getStrategy());
+        assertNotEquals(EMPTY_STRING, remediation.getStrategy());
+        assertEquals(strategy, remediation.getStrategy());
+
+        assertNotNull(remediation.getApmCode());
+        assertNotEquals(EMPTY_STRING, remediation.getApmCode());
+        assertEquals(apmCode, remediation.getApmCode());
+
+        assertNotNull(remediation.getComponent());
+        assertNotEquals(EMPTY_STRING, remediation.getComponent());
+        assertEquals(component, remediation.getComponent());
+
+        assertNotNull(remediation.getVersion());
+        assertNotEquals(EMPTY_STRING, remediation.getVersion());
+        assertEquals(version, remediation.getVersion());
+
+        assertNotNull(remediation.getAction().getValue());
+        assertNotEquals(EMPTY_STRING, remediation.getAction().getValue());
+        assertEquals(action.toUpperCase(), remediation.getAction().getValue());
+
+        assertNull(remediation.getNewVersion());
+
+        assertNotNull(remediation.getDeliveryDate().getValue());
+        assertNotEquals(EMPTY_STRING, remediation.getDeliveryDate().getValue());
+        assertEquals(deliveryDate, remediation.getDeliveryDate().getValue());
+    }
+
+    @Test
     void Given_data_with_invalid_action_value_When_try_to_create_Then_throw_an_exception() {
         //Arrange
         String strategy = "SIPFY25";
