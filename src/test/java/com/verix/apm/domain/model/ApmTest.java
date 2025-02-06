@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 public class ApmTest {
     private static final String EMPTY_STRING = "";
-    private static final String INVALID_CHAR = "!¡'¿+ç´%()*";
+    private static final String INVALID_CHAR = "!¡'¿+ç´%*";
 
     @Test
     void Given_a_valid_data_When_try_to_create_Then_create_a_valid_apm() {
@@ -205,7 +205,7 @@ public class ApmTest {
         String isCompliant = "Yes";
         String cia = "No";
         String lcState = INVALID_CHAR;
-        String productionDate = "01-Oct-2009";
+        String productionDate = INVALID_CHAR;
         String retirementDate = "01-Jan-2050";
         String dbrRating = INVALID_CHAR;
         String applicationTested = INVALID_CHAR;
@@ -215,7 +215,7 @@ public class ApmTest {
         String svp = INVALID_CHAR;
         String portfolioOwner = "Judith Fuentes";
         String iso = INVALID_CHAR;
-        String country = INVALID_CHAR;
+        String country = "CL";
 
         //Act
         Apm apm = new Apm(
@@ -253,27 +253,36 @@ public class ApmTest {
         assertNotEquals(EMPTY_STRING, apm.getCia());
         assertEquals(Boolean.FALSE, apm.getCia());
 
+        assertNull(apm.getLcState());
+
+        assertNull(apm.getProductionDate().getValue());
+
         assertNotNull(apm.getRetirementDate().getValue());
         assertNotEquals(EMPTY_STRING, apm.getRetirementDate().getValue());
         assertEquals("2050-01-01", apm.getRetirementDate().getValue());
+
+        assertNull(apm.getDbrRating());
+
+        assertNull(apm.getApplicationTested());
 
         assertNotNull(apm.getApplicationContact());
         assertNotEquals(EMPTY_STRING, apm.getApplicationContact());
         assertEquals(applicationContact, apm.getApplicationContact());
 
+        assertNull(apm.getManager());
+
         assertNotNull(apm.getVp());
         assertNotEquals(EMPTY_STRING, apm.getVp());
         assertEquals(vp, apm.getVp());
+
+        assertNull(apm.getSvp());
 
         assertNotNull(apm.getPortfolioOwner());
         assertNotEquals(EMPTY_STRING, apm.getPortfolioOwner());
         assertEquals(portfolioOwner, apm.getPortfolioOwner());
 
-        assertNull(apm.getLcState());
-        assertNull(apm.getDbrRating());
-        assertNull(apm.getProductionDate().getValue());
-        assertNull(apm.getManager());
-        assertNull(apm.getSvp());
         assertNull(apm.getIso());
+
+        assertEquals(country, apm.getCountry());
     }
 }

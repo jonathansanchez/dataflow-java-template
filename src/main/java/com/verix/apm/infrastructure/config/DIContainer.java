@@ -43,13 +43,14 @@ public final class DIContainer {
         options.setTempBucket(System.getenv("TEMP_LOCATION"));
 
         // Pais
-        options.setCl(System.getenv("CL"));
+/*        options.setCl(System.getenv("CL"));
         options.setCca(System.getenv("CCA"));
         options.setCo(System.getenv("CO"));
         options.setMx(System.getenv("MX"));
         options.setPe(System.getenv("PE"));
         options.setUy(System.getenv("UY"));
-        options.setIb(System.getenv("IB"));
+        options.setUyT(System.getenv("UYT"));
+        options.setIb(System.getenv("IB"));*/
 
         printPipelineOptions(options);
 

@@ -16,15 +16,15 @@ public class StringToApmTransformation extends DoFn<String, Apm> {
 
     @ProcessElement
     public void processElement(@Element String line, ProcessContext context,  OutputReceiver<Apm> out) {
-        JobOptions options = context.getPipelineOptions().as(JobOptions.class);
+        //JobOptions options = context.getPipelineOptions().as(JobOptions.class);
 
         List<String> splitValue = Optional
                 .ofNullable(line)
                 .map(s -> Arrays.asList(s.trim().split(COMMA))) // Separa por comas
                 .orElseThrow(RuntimeException::new); // Si la línea es null, lanza excepción
 
-        String portfolioOwner = splitValue.get(13);
-        String pais = obtenerPais(options, portfolioOwner);
+        //String portfolioOwner = splitValue.get(13);
+        //String pais = obtenerPais(options, portfolioOwner);
 
 
         out.output(new Apm(
@@ -43,12 +43,12 @@ public class StringToApmTransformation extends DoFn<String, Apm> {
                         splitValue.get(12), // svp
                         splitValue.get(13), // portfolioOwner
                         splitValue.get(14),  // iso
-                        pais
+                        splitValue.get(15)   //pais
                 )
         );
     }
 
-    private static String obtenerPais(JobOptions options, String portfolioOwner) {
+/*    private static String obtenerPais(JobOptions options, String portfolioOwner) {
         Map<String, String> countryMap = Map.of(
                 options.getCl(), "CL",
                 options.getCo(), "CO",
@@ -56,10 +56,11 @@ public class StringToApmTransformation extends DoFn<String, Apm> {
                 options.getMx(), "MX",
                 options.getPe(), "PE",
                 options.getUy(), "UY",
-                options.getIb(), "IB"
+                options.getIb(), "IB",
+                options.getUyT(), "UY"
         );
 
         // Buscar el país correspondiente
         return countryMap.getOrDefault(portfolioOwner, null);
-    }
+    }*/
 }

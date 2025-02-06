@@ -17,7 +17,7 @@ public interface JobOptions extends PipelineOptions {
     void setTempBucket(String tempBucket);
 
     //
-    @Description("Country CL")
+/*    @Description("Country CL")
     String getCl();
     void setCl(String inputCl);
 
@@ -41,7 +41,11 @@ public interface JobOptions extends PipelineOptions {
     String getUy();
     void setUy(String inputUY);
 
+    @Description("Country UYT")
+    String getUyT();
+    void setUyT(String inputUYT);
+
     @Description("Country IB")
     String getIb();
-    void setIb(String inputIB);
+    void setIb(String inputIB);*/
 }

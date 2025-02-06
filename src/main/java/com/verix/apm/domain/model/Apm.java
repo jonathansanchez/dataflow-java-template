@@ -12,6 +12,8 @@ public class Apm implements Serializable {
     //private static final String REGEX_SPECIAL_CHARS = "[^a-zA-Z0-9\\s.,-@#$/áéíóúÁÉÍÓÚñÑ]";
     //private static final String REGEX_SPECIAL_CHARS = "[^a-zA-Z0-9\\s(),.-@#$/áéíóúÁÉÍÓÚñÑ]";
     private static final String REGEX_SPECIAL_CHARS = "[^a-zA-Z0-9\\s(),.-@#$/áéíóúÁÉÍÓÚñÑ_]";
+    //private static final String REGEX_SPECIAL_CHARS = "[^a-zA-Z0-9\\s(),.-_áéíóúÁÉÍÓÚñÑ]"; //nuevo
+
     private static final String REPLACEMENT = "";
     private static final String EMPTY_REPLACEMENT = " ";
 
@@ -33,41 +35,6 @@ public class Apm implements Serializable {
     private final String iso;
     private final String country;
 
-    //Constructor: recibe todos los valores - Asigna valores
-/*    public Apm(String apmCode, String apmName, Boolean isCompliant, Boolean cia, String lcState, LifeDate productionDate, LifeDate retirementDate, String dbrRating, Boolean applicationTested, String applicationContact, String manager, String vp, String svp, String portfolioOwner, String iso) {
-        this.apmCode = StringCleaner.removeSpecialCharsForRequired(apmCode);
-        this.apmName = StringCleaner.removeSpecialCharsForOptional(apmName);
-        this.isCompliant = BooleanCleaner.parseBoolean(String.valueOf(isCompliant));
-        this.cia = BooleanCleaner.parseBoolean(String.valueOf(cia));
-        this.lcState = StringCleaner.removeSpecialCharsForOptional(lcState);
-        this.productionDate = productionDate;
-        this.retirementDate = retirementDate;
-        this.dbrRating = StringCleaner.removeSpecialCharsForOptional(dbrRating);
-        this.applicationTested = BooleanCleaner.parseBoolean(String.valueOf(applicationTested));
-        this.applicationContact = StringCleaner.removeSpecialCharsForRequired(applicationContact);
-        this.manager = StringCleaner.removeSpecialCharsForOptional(manager);
-        this.vp = StringCleaner.removeSpecialCharsForRequired(vp);
-        this.svp = StringCleaner.removeSpecialCharsForOptional(svp);
-        this.portfolioOwner = StringCleaner.removeSpecialCharsForOptional(portfolioOwner);
-        this.iso = StringCleaner.removeSpecialCharsForOptional(iso);
-
-        public String getApmCode() { return apmCode; }
-        public String getApmName() { return apmName; }
-        public Boolean getIsCompliant() { return isCompliant; }
-        public Boolean getCia() { return cia; }
-        public String getLcState() { return lcState; }
-        public LifeDate getProductionDate() { return productionDate; }
-        public LifeDate getRetirementDate() { return retirementDate; }
-        public String getDbrRating() { return dbrRating; }
-        public Boolean getApplicationTested() { return applicationTested; }
-        public String getApplicationContact() { return applicationContact; }
-        public String getManager() { return manager; }
-        public String getVp() { return vp; }
-        public String getSvp() { return svp; }
-        public String getPortfolioOwner() { return portfolioOwner; }
-        public String getIso() { return iso; }
-    }*/
-
         public Apm(String apmCode, String apmName, String isCompliant, String cia, String lcState, LifeDate productionDate, LifeDate retirementDate, String dbrRating, String applicationTested, String applicationContact, String manager, String vp, String svp, String portfolioOwner, String iso, String country) {
         this.apmCode = setApmCode(apmCode);
         this.apmName = setApmName(apmName);
@@ -84,7 +51,7 @@ public class Apm implements Serializable {
         this.svp = setSvp(svp);
         this.portfolioOwner = setPortfolioOwner(portfolioOwner);
         this.iso = setIso(iso);
-        this.country=country;
+        this.country=setCountry(country);
     }
 
 
@@ -134,6 +101,8 @@ public class Apm implements Serializable {
     public String setIso(String iso){return removeSpecialCharsForOptional(iso);}
 
     public String getCountry(){return country;}
+    public String setCountry(String country){return removeSpecialCharsForOptional(country);}
+
 
 
 
@@ -157,6 +126,7 @@ public class Apm implements Serializable {
                         .replaceAll("_", EMPTY_REPLACEMENT)
                         .replaceAll("-", EMPTY_REPLACEMENT)
                         .replaceAll(",", REPLACEMENT))
+                .map(s -> s.isEmpty() ? null : s)
                 .filter(s -> !s.equalsIgnoreCase("NULL"))
                 .orElse(null);
 

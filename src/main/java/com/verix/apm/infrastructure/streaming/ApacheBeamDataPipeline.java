@@ -17,7 +17,6 @@ import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.values.PCollection;
-import java.io.Serializable;
 
 public class ApacheBeamDataPipeline implements DataPipeline {
 
@@ -76,15 +75,15 @@ public class ApacheBeamDataPipeline implements DataPipeline {
         }
     }
 
-    private static class Print extends DoFn<String, Void> {
+/*    private static class Print extends DoFn<String, Void> {
         @ProcessElement
         public void processElement(@Element String element, OutputReceiver<Void> out) {
             System.out.println("Elemento de rawData: " + element);
         }
-    }
+    }*/
 
 
-    private static class PrintNumberOfColumns extends DoFn<String, Void> {
+/*    private static class PrintNumberOfColumns extends DoFn<String, Void> {
         @ProcessElement
         public void processElement(@Element String element, OutputReceiver<Void> out) {
             String[] columns = element.split(",");
@@ -94,15 +93,15 @@ public class ApacheBeamDataPipeline implements DataPipeline {
                 System.out.println("Índice [0]: " + columns[0] + " | Columnas: " + columns.length);
             }
         }
-    }
+    }*/
 
-    private static class PrintObject extends DoFn<Apm, Void> {
+/*    private static class PrintObject extends DoFn<Apm, Void> {
         private static final Gson gson = new Gson();
 
         @ProcessElement
         public void processElement(@Element Apm apm, OutputReceiver<Void> out) {
             System.out.println("Objeto Apm: " + gson.toJson(apm));
         }
-    }
+    }*/
 
 }

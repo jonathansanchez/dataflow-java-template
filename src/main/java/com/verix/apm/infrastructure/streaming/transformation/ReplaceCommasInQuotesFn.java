@@ -38,13 +38,13 @@ public class ReplaceCommasInQuotesFn extends DoFn<String, String> {
         }
     }
 
-    // Metodo para reemplazar celdas vacías por null
+
     private String replaceEmptyCellsWithNull(String line) {
         String[] columns = line.split(COMMA);
 
         for (int i = 0; i < columns.length; i++) {
             if (columns[i].trim().isEmpty()) {
-                columns[i] = "null";
+                columns[i] = null;
             }
         }
         return String.join(COMMA, columns);
