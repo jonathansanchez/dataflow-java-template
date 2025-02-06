@@ -4,7 +4,6 @@ import com.verix.landing.domain.model.Landing;
 import org.apache.beam.sdk.transforms.DoFn;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -19,7 +18,6 @@ public class ConvertStringToLanding extends DoFn<String, Landing> {
                 .ofNullable(line)
                 .map(ConvertStringToLanding::parseLineInQuotes)
                 .orElseThrow(RuntimeException::new);
-        System.out.println(splitValue.size() + " - " + splitValue);
         out.output(
                 new Landing(
                         splitValue.get(0),

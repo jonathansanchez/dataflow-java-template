@@ -516,7 +516,7 @@ public class LandingTest {
     @Test
     public void Given_null_values_for_required_data_When_try_to_create_Then_throw_an_exception() {
         //Arrange
-        Map<String, String> invalidValues = LandingInvalidStub.onlyOptionalFields();
+        Map<String, String> invalidValues = LandingInvalidStub.nullForRequiredFields();
 
         //Act and Assert
         assertThrows(InvalidPropertyException.class,
