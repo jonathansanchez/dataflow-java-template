@@ -35,10 +35,6 @@ public class DIContainer {
                 .withValidation()
                 .as(JobOptions.class);
 
-        options.setInput("gs://bucket-swc-test/landing/data/landing.csv");
-        options.setOutputTable("dataset_swc_test.landing");
-        options.setTempBucket("gs://bucket-swc-test/landing/temp-files");
-
         DIContainer container = new DIContainer();
 
         container.register("job_options", options);

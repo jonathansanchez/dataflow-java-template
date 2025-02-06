@@ -52,13 +52,10 @@ public class LandingPipelineIntegrationTest {
         removeLineBreaks = new RemoveLineBreaks();
         bigQuery = BigQueryOptions.getDefaultInstance().getService();
 
-        /*jobOptions.setInput(INPUT_FILE);
+        jobOptions.setInput(INPUT_FILE);
         jobOptions.setOutputTable(String.format("%s:%s.%s", PROJECT_ID, DATASET_NAME, TABLE_NAME));
-        jobOptions.setTempBucket(TEMP_LOCATION);*/
-        jobOptions.setInput("gs://bucket-swc-test/landing/data/minilanding.csv");
-        jobOptions.setOutputTable("dataset_swc_test.landing");
-        jobOptions.setTempBucket("gs://bucket-swc-test/landing/temp-files");
-        tableId = TableId.of("dataset_swc_test", "landing");
+        jobOptions.setTempBucket(TEMP_LOCATION);
+        tableId = TableId.of(DATASET_NAME, TABLE_NAME);
 
         // Delete table before insert
         tearDown();
