@@ -53,8 +53,8 @@ public class LandingPipelineIntegrationTest {
         bigQuery = BigQueryOptions.getDefaultInstance().getService();
 
         jobOptions.setInput(INPUT_FILE);
-        jobOptions.setOutputTable(String.format("%s:%s.%s", PROJECT_ID, DATASET_NAME, TABLE_NAME));
-        jobOptions.setTempBucket(TEMP_LOCATION);
+        jobOptions.setOutput(String.format("%s:%s.%s", PROJECT_ID, DATASET_NAME, TABLE_NAME));
+        jobOptions.setTemp(TEMP_LOCATION);
         tableId = TableId.of(DATASET_NAME, TABLE_NAME);
 
         // Delete table before insert

@@ -22,9 +22,9 @@ public class BigQueryRepository {
 
     public BigQueryIO.@UnknownKeyFor @NonNull @Initialized Write<@UnknownKeyFor @NonNull @Initialized TableRow> writeToBigQuery() {
         return BigQueryIO.writeTableRows()
-                .to(options.getOutputTable())
+                .to(options.getOutput())
                 .withSchema(landingTableSchema.create())
-                .withCustomGcsTempLocation(ValueProvider.StaticValueProvider.of(options.getTempBucket()))
+                .withCustomGcsTempLocation(ValueProvider.StaticValueProvider.of(options.getTemp()))
                 .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED)
                 .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE);
     }

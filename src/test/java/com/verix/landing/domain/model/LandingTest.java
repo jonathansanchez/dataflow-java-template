@@ -6,556 +6,443 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-import java.util.Map;
-
 public class LandingTest {
+    public static final String EMPTY_STRING = "";
+    public static final String INVALID_CHARS = "!¡'¿+ç´%*";
 
     @Test
-    public void Given_all_fields_data_When_try_to_create_Then_create_a_valid_landing() {
+    public void Given_all_fields_data_When_try_to_create_Then_create_a_valid_result()
+    {
         //Arrange
-        Map<String, String> validValues = LandingValidStub.allFields();
-
-        //Act
-        Landing landing = new Landing(
-                validValues.get("uniqueComponentId"),
-                validValues.get("apmCode"),
-                validValues.get("appName"),
-                validValues.get("vendor"),
-                validValues.get("swType"),
-                validValues.get("swName"),
-                validValues.get("swId"),
-                validValues.get("swVersion"),
-                validValues.get("swExpireIn"),
-                validValues.get("groupHeadName"),
-                validValues.get("businessLines"),
-                validValues.get("dbrTier"),
-                validValues.get("swValidPlan"),
-                validValues.get("appValidPlan"),
-                validValues.get("swPlanStatus"),
-                validValues.get("planNo"),
-                validValues.get("planName"),
-                validValues.get("planStartDate"),
-                validValues.get("planEndDate"),
-                validValues.get("planFunded"),
-                validValues.get("refNumber"),
-                validValues.get("planComments"),
-                validValues.get("planExternalCost"),
-                validValues.get("planInternalCost"),
-                validValues.get("planLicenseCost"),
-                validValues.get("eosDate"),
-                validValues.get("extendedDate"),
-                validValues.get("extendedCustomDate"),
-                validValues.get("localRCMP"),
-                validValues.get("countryName"),
-                validValues.get("internetFacing"),
-                validValues.get("usFlag"),
-                validValues.get("lifecycle"),
-                validValues.get("environments")
+        Landing expected = new Landing(
+                "10036/45578",
+                "B8RW",
+                "Intranet Portal - SBP",
+                "Microsoft",
+                "Operating System",
+                "Windows Server",
+                "45578",
+                "Windows Server 2016 Standard 10.0.14393.5502",
+                ">36 Months",
+                "Francisco Aristeguieta Silva",
+                "Peru",
+                "Tier 2",
+                "Yes",
+                "No",
+                "Draft",
+                "38860",
+                "DES-WS2016-PG",
+                "11/01/2025",
+                "10/31/2026",
+                "Yes",
+                "WS2016",
+                "En revisión.",
+                "0",
+                "0",
+                "0",
+                "01/12/2027",
+                "01/12/2027",
+                "01/12/2027",
+                "No",
+                "Peru",
+                "No",
+                "false",
+                "Production",
+                "Prod,DR,UAT/QAT/Pre-PROD,IST,Dev"
         );
 
+        //Act
+        Landing result = LandingStub.allFields();
+
         //Assert
-        assertNotNull(landing.getUniqueComponentId());
-        assertEquals(validValues.get("uniqueComponentId"), landing.getUniqueComponentId());
+        assertNotNull(result.getUniqueComponentId());
+        assertEquals(expected.getUniqueComponentId(), result.getUniqueComponentId());
 
-        assertNotNull(landing.getApmCode());
-        assertEquals(validValues.get("apmCode"), landing.getApmCode());
+        assertNotNull(result.getApmCode());
+        assertEquals(expected.getApmCode(), result.getApmCode());
 
-        assertNotNull(landing.getAppName());
-        assertEquals(validValues.get("appName"), landing.getAppName());
+        assertNotNull(result.getAppName());
+        assertEquals(expected.getAppName(), result.getAppName());
 
-        assertNotNull(landing.getVendor());
-        assertEquals(validValues.get("vendor"), landing.getVendor());
+        assertNotNull(result.getVendor());
+        assertEquals(expected.getVendor(), result.getVendor());
 
-        assertNotNull(landing.getSwType());
-        assertEquals(validValues.get("swType"), landing.getSwType());
+        assertNotNull(result.getSwType());
+        assertEquals(expected.getSwType(), result.getSwType());
 
-        assertNotNull(landing.getSwName());
-        assertEquals(validValues.get("swName"), landing.getSwName());
+        assertNotNull(result.getSwName());
+        assertEquals(expected.getSwName(), result.getSwName());
 
-        assertNotNull(landing.getSwId());
-        assertEquals(Integer.parseInt(validValues.get("swId")), landing.getSwId());
+        assertNotNull(result.getSwId());
+        assertEquals(expected.getSwId(), result.getSwId());
 
-        assertNotNull(landing.getSwVersion());
-        assertEquals(validValues.get("swVersion"), landing.getSwVersion());
+        assertNotNull(result.getSwVersion());
+        assertEquals(expected.getSwVersion(), result.getSwVersion());
 
-        assertNotNull(landing.getSwExpireIn());
-        assertEquals(validValues.get("swExpireIn"), landing.getSwExpireIn());
+        assertNotNull(result.getSwExpireIn());
+        assertEquals(expected.getSwExpireIn(), result.getSwExpireIn());
 
-        assertNotNull(landing.getGroupHeadName());
-        assertEquals(validValues.get("groupHeadName"), landing.getGroupHeadName());
+        assertNotNull(result.getGroupHeadName());
+        assertEquals(expected.getGroupHeadName(), result.getGroupHeadName());
 
-        assertNotNull(landing.getBusinessLines());
-        assertEquals(validValues.get("businessLines"), landing.getBusinessLines());
+        assertNotNull(result.getBusinessLines());
+        assertEquals(expected.getBusinessLines(), result.getBusinessLines());
 
-        assertNotNull(landing.getDbrTier());
-        assertEquals(validValues.get("dbrTier"), landing.getDbrTier());
+        assertNotNull(result.getDbrTier());
+        assertEquals(expected.getDbrTier(), result.getDbrTier());
 
-        assertNotNull(landing.getSwValidPlan());
-        assertTrue(landing.getSwValidPlan());
+        assertNotNull(result.getSwValidPlan());
+        assertTrue(result.getSwValidPlan());
 
-        assertNotNull(landing.getAppValidPlan());
-        assertFalse(landing.getAppValidPlan());
+        assertNotNull(result.getAppValidPlan());
+        assertFalse(result.getAppValidPlan());
 
-        assertNotNull(landing.getSwPlanStatus());
-        assertEquals(validValues.get("swPlanStatus"), landing.getSwPlanStatus());
+        assertNotNull(result.getSwPlanStatus());
+        assertEquals(expected.getSwPlanStatus(), result.getSwPlanStatus());
 
-        assertNotNull(landing.getPlanNo());
-        assertEquals(Integer.parseInt(validValues.get("planNo")), landing.getPlanNo());
+        assertNotNull(result.getPlanNo());
+        assertEquals(expected.getPlanNo(), result.getPlanNo());
 
-        assertNotNull(landing.getPlanName());
-        assertEquals(validValues.get("planName"), landing.getPlanName());
+        assertNotNull(result.getPlanName());
+        assertEquals(expected.getPlanName(), result.getPlanName());
 
-        assertNotNull(landing.getPlanStartDate());
-        assertEquals(LandingValidStub.EXPECTED_START_PLAN_DATE, landing.getPlanStartDate());
+        assertNotNull(result.getPlanStartDate());
+        assertEquals(expected.getPlanStartDate(), result.getPlanStartDate());
 
-        assertNotNull(landing.getPlanEndDate());
-        assertEquals(LandingValidStub.EXPECTED_END_PLAN_DATE, landing.getPlanEndDate());
+        assertNotNull(result.getPlanEndDate());
+        assertEquals(expected.getPlanEndDate(), result.getPlanEndDate());
 
-        assertNotNull(landing.getPlanFunded());
-        assertTrue(landing.getPlanFunded());
+        assertNotNull(result.getPlanFunded());
+        assertTrue(result.getPlanFunded());
 
-        assertNotNull(landing.getRefNumber());
-        assertEquals(validValues.get("refNumber"), landing.getRefNumber());
+        assertNotNull(result.getRefNumber());
+        assertEquals(expected.getRefNumber(), result.getRefNumber());
 
-        assertNotNull(landing.getPlanComments());
-        assertEquals(validValues.get("planComments"), landing.getPlanComments());
+        assertNotNull(result.getPlanComments());
+        assertEquals(expected.getPlanComments(), result.getPlanComments());
 
-        assertNotNull(landing.getPlanExternalCost());
-        assertEquals(Integer.parseInt(validValues.get("planExternalCost")), landing.getPlanExternalCost());
+        assertNotNull(result.getPlanExternalCost());
+        assertEquals(expected.getPlanExternalCost(), result.getPlanExternalCost());
 
-        assertNotNull(landing.getPlanInternalCost());
-        assertEquals(Integer.parseInt(validValues.get("planInternalCost")), landing.getPlanInternalCost());
+        assertNotNull(result.getPlanInternalCost());
+        assertEquals(expected.getPlanInternalCost(), result.getPlanInternalCost());
 
-        assertNotNull(landing.getPlanLicenseCost());
-        assertEquals(Integer.parseInt(validValues.get("planLicenseCost")), landing.getPlanLicenseCost());
+        assertNotNull(result.getPlanLicenseCost());
+        assertEquals(expected.getPlanLicenseCost(), result.getPlanLicenseCost());
 
-        assertNotNull(landing.getEosDate());
-        assertEquals(LandingValidStub.EXPECTED_DATE, landing.getEosDate());
+        assertNotNull(result.getEosDate());
+        assertEquals(expected.getEosDate(), result.getEosDate());
 
-        assertNotNull(landing.getExtendedDate());
-        assertEquals(LandingValidStub.EXPECTED_DATE, landing.getExtendedDate());
+        assertNotNull(result.getExtendedDate());
+        assertEquals(expected.getExtendedDate(), result.getExtendedDate());
 
-        assertNotNull(landing.getExtendedCustomDate());
-        assertEquals(LandingValidStub.EXPECTED_DATE, landing.getExtendedCustomDate());
+        assertNotNull(result.getExtendedCustomDate());
+        assertEquals(expected.getExtendedCustomDate(), result.getExtendedCustomDate());
 
-        assertNotNull(landing.getLocalRCMP());
-        assertFalse(landing.getLocalRCMP());
+        assertNotNull(result.getLocalRCMP());
+        assertFalse(result.getLocalRCMP());
 
-        assertNotNull(landing.getCountryName());
-        assertEquals(validValues.get("countryName"), landing.getCountryName());
+        assertNotNull(result.getCountryName());
+        assertEquals(expected.getCountryName(), result.getCountryName());
 
-        assertNotNull(landing.getInternetFacing());
-        assertFalse(landing.getInternetFacing());
+        assertNotNull(result.getInternetFacing());
+        assertFalse(result.getInternetFacing());
 
-        assertNotNull(landing.getUsFlag());
-        assertFalse(landing.getUsFlag());
+        assertNotNull(result.getUsFlag());
+        assertFalse(result.getUsFlag());
 
-        assertNotNull(landing.getLifecycle());
-        assertEquals(validValues.get("lifecycle"), landing.getLifecycle());
+        assertNotNull(result.getLifecycle());
+        assertEquals(expected.getLifecycle(), result.getLifecycle());
 
-        assertNotNull(landing.getEnvironments());
-        assertEquals(validValues.get("environments"), landing.getEnvironments());
+        assertNotNull(result.getEnvironments());
+        assertEquals(expected.getEnvironments(), result.getEnvironments());
     }
 
     @Test
-    public void Given_only_required_data_When_try_to_create_Then_create_a_valid_landing() {
+    public void Given_only_required_data_When_try_to_create_Then_create_a_valid_result() {
         //Arrange
-        Map<String, String> validValues = LandingValidStub.onlyRequiredFields();
+        Landing expected = new Landing(
+                "10036/45578",
+                "B8RW",
+                "Intranet Portal - SBP",
+                "Microsoft",
+                "Operating System",
+                "Windows Server",
+                "45578",
+                "Windows Server 2016 Standard 10.0.14393.5502",
+                ">36 Months",
+                "Francisco Aristeguieta Silva",
+                "Peru",
+                EMPTY_STRING,
+                "Yes",
+                "No",
+                "Missing",
+                EMPTY_STRING,
+                EMPTY_STRING,
+                EMPTY_STRING,
+                EMPTY_STRING,
+                EMPTY_STRING,
+                EMPTY_STRING,
+                EMPTY_STRING,
+                EMPTY_STRING,
+                EMPTY_STRING,
+                EMPTY_STRING,
+                EMPTY_STRING,
+                EMPTY_STRING,
+                EMPTY_STRING,
+                "No",
+                "Peru",
+                "No",
+                "false",
+                "Production",
+                "Prod,DR,UAT/QAT/Pre-PROD,IST,Dev");
 
         //Act
-        Landing landing = new Landing(
-                validValues.get("uniqueComponentId"),
-                validValues.get("apmCode"),
-                validValues.get("appName"),
-                validValues.get("vendor"),
-                validValues.get("swType"),
-                validValues.get("swName"),
-                validValues.get("swId"),
-                validValues.get("swVersion"),
-                validValues.get("swExpireIn"),
-                validValues.get("groupHeadName"),
-                validValues.get("businessLines"),
-                validValues.get("dbrTier"),
-                validValues.get("swValidPlan"),
-                validValues.get("appValidPlan"),
-                validValues.get("swPlanStatus"),
-                validValues.get("planNo"),
-                validValues.get("planName"),
-                validValues.get("planStartDate"),
-                validValues.get("planEndDate"),
-                validValues.get("planFunded"),
-                validValues.get("refNumber"),
-                validValues.get("planComments"),
-                validValues.get("planExternalCost"),
-                validValues.get("planInternalCost"),
-                validValues.get("planLicenseCost"),
-                validValues.get("eosDate"),
-                validValues.get("extendedDate"),
-                validValues.get("extendedCustomDate"),
-                validValues.get("localRCMP"),
-                validValues.get("countryName"),
-                validValues.get("internetFacing"),
-                validValues.get("usFlag"),
-                validValues.get("lifecycle"),
-                validValues.get("environments")
-        );
+        Landing result = LandingStub.onlyRequiredFields();
 
         //Assert
-        assertNotNull(landing.getUniqueComponentId());
-        assertEquals(validValues.get("uniqueComponentId"), landing.getUniqueComponentId());
+        assertNotNull(result.getUniqueComponentId());
+        assertEquals(expected.getUniqueComponentId(), result.getUniqueComponentId());
 
-        assertNotNull(landing.getApmCode());
-        assertEquals(validValues.get("apmCode"), landing.getApmCode());
+        assertNotNull(result.getApmCode());
+        assertEquals(expected.getApmCode(), result.getApmCode());
 
-        assertNotNull(landing.getAppName());
-        assertEquals(validValues.get("appName"), landing.getAppName());
+        assertNotNull(result.getAppName());
+        assertEquals(expected.getAppName(), result.getAppName());
 
-        assertNotNull(landing.getVendor());
-        assertEquals(validValues.get("vendor"), landing.getVendor());
+        assertNotNull(result.getVendor());
+        assertEquals(expected.getVendor(), result.getVendor());
 
-        assertNotNull(landing.getSwType());
-        assertEquals(validValues.get("swType"), landing.getSwType());
+        assertNotNull(result.getSwType());
+        assertEquals(expected.getSwType(), result.getSwType());
 
-        assertNotNull(landing.getSwName());
-        assertEquals(validValues.get("swName"), landing.getSwName());
+        assertNotNull(result.getSwName());
+        assertEquals(expected.getSwName(), result.getSwName());
 
-        assertNotNull(landing.getSwId());
-        assertEquals(Integer.parseInt(validValues.get("swId")), landing.getSwId());
+        assertNotNull(result.getSwId());
+        assertEquals(expected.getSwId(), result.getSwId());
 
-        assertNotNull(landing.getSwVersion());
-        assertEquals(validValues.get("swVersion"), landing.getSwVersion());
+        assertNotNull(result.getSwVersion());
+        assertEquals(expected.getSwVersion(), result.getSwVersion());
 
-        assertNotNull(landing.getSwExpireIn());
-        assertEquals(validValues.get("swExpireIn"), landing.getSwExpireIn());
+        assertNotNull(result.getSwExpireIn());
+        assertEquals(expected.getSwExpireIn(), result.getSwExpireIn());
 
-        assertNotNull(landing.getGroupHeadName());
-        assertEquals(validValues.get("groupHeadName"), landing.getGroupHeadName());
+        assertNotNull(result.getGroupHeadName());
+        assertEquals(expected.getGroupHeadName(), result.getGroupHeadName());
 
-        assertNotNull(landing.getBusinessLines());
-        assertEquals(validValues.get("businessLines"), landing.getBusinessLines());
+        assertNotNull(result.getBusinessLines());
+        assertEquals(expected.getBusinessLines(), result.getBusinessLines());
 
-        assertNull(landing.getDbrTier());
+        assertNull(result.getDbrTier());
 
-        assertNotNull(landing.getSwValidPlan());
-        assertTrue(landing.getSwValidPlan());
+        assertNotNull(result.getSwValidPlan());
+        assertTrue(result.getSwValidPlan());
 
-        assertNotNull(landing.getAppValidPlan());
-        assertFalse(landing.getAppValidPlan());
+        assertNotNull(result.getAppValidPlan());
+        assertFalse(result.getAppValidPlan());
 
-        assertNotNull(landing.getSwPlanStatus());
-        assertEquals(validValues.get("swPlanStatus"), landing.getSwPlanStatus());
+        assertNotNull(result.getSwPlanStatus());
+        assertEquals(expected.getSwPlanStatus(), result.getSwPlanStatus());
 
-        assertNull(landing.getPlanNo());
+        assertNull(result.getPlanNo());
 
-        assertNull(landing.getPlanName());
+        assertNull(result.getPlanName());
 
-        assertNull(landing.getPlanStartDate());
+        assertNull(result.getPlanStartDate());
 
-        assertNull(landing.getPlanEndDate());
+        assertNull(result.getPlanEndDate());
 
-        assertNull(landing.getPlanFunded());
+        assertNull(result.getPlanFunded());
 
-        assertNull(landing.getRefNumber());
+        assertNull(result.getRefNumber());
 
-        assertNull(landing.getPlanComments());
+        assertNull(result.getPlanComments());
 
-        assertNull(landing.getPlanExternalCost());
+        assertNull(result.getPlanExternalCost());
 
-        assertNull(landing.getPlanInternalCost());
+        assertNull(result.getPlanInternalCost());
 
-        assertNull(landing.getPlanLicenseCost());
+        assertNull(result.getPlanLicenseCost());
 
-        assertNull(landing.getEosDate());
+        assertNull(result.getEosDate());
 
-        assertNull(landing.getExtendedDate());
+        assertNull(result.getExtendedDate());
 
-        assertNull(landing.getExtendedCustomDate());
+        assertNull(result.getExtendedCustomDate());
 
-        assertNotNull(landing.getLocalRCMP());
-        assertFalse(landing.getLocalRCMP());
+        assertNotNull(result.getLocalRCMP());
+        assertFalse(result.getLocalRCMP());
 
-        assertNotNull(landing.getCountryName());
-        assertEquals(validValues.get("countryName"), landing.getCountryName());
+        assertNotNull(result.getCountryName());
+        assertEquals(expected.getCountryName(), result.getCountryName());
 
-        assertNotNull(landing.getInternetFacing());
-        assertFalse(landing.getInternetFacing());
+        assertNotNull(result.getInternetFacing());
+        assertFalse(result.getInternetFacing());
 
-        assertNotNull(landing.getUsFlag());
-        assertFalse(landing.getUsFlag());
+        assertNotNull(result.getUsFlag());
+        assertFalse(result.getUsFlag());
 
-        assertNotNull(landing.getLifecycle());
-        assertEquals(validValues.get("lifecycle"), landing.getLifecycle());
+        assertNotNull(result.getLifecycle());
+        assertEquals(expected.getLifecycle(), result.getLifecycle());
 
-        assertNotNull(landing.getEnvironments());
-        assertEquals(validValues.get("environments"), landing.getEnvironments());
+        assertNotNull(result.getEnvironments());
+        assertEquals(expected.getEnvironments(), result.getEnvironments());
     }
 
     @Test
-    public void Given_invalid_values_for_optional_data_When_try_to_create_Then_create_a_valid_landing() {
-        //Arrange
-        Map<String, String> validValues = LandingValidStub.invalidCharsForOptional();
+    public void Given_invalid_values_for_optional_data_When_try_to_create_Then_create_a_valid_result() {
 
-        //Act
-        Landing landing = new Landing(
-                validValues.get("uniqueComponentId"),
-                validValues.get("apmCode"),
-                validValues.get("appName"),
-                validValues.get("vendor"),
-                validValues.get("swType"),
-                validValues.get("swName"),
-                validValues.get("swId"),
-                validValues.get("swVersion"),
-                validValues.get("swExpireIn"),
-                validValues.get("groupHeadName"),
-                validValues.get("businessLines"),
-                validValues.get("dbrTier"),
-                validValues.get("swValidPlan"),
-                validValues.get("appValidPlan"),
-                validValues.get("swPlanStatus"),
-                validValues.get("planNo"),
-                validValues.get("planName"),
-                validValues.get("planStartDate"),
-                validValues.get("planEndDate"),
-                validValues.get("planFunded"),
-                validValues.get("refNumber"),
-                validValues.get("planComments"),
-                validValues.get("planExternalCost"),
-                validValues.get("planInternalCost"),
-                validValues.get("planLicenseCost"),
-                validValues.get("eosDate"),
-                validValues.get("extendedDate"),
-                validValues.get("extendedCustomDate"),
-                validValues.get("localRCMP"),
-                validValues.get("countryName"),
-                validValues.get("internetFacing"),
-                validValues.get("usFlag"),
-                validValues.get("lifecycle"),
-                validValues.get("environments")
-        );
+        //Arrange
+        Landing expected = new Landing(
+                "10036/45578",
+                "B8RW",
+                "Intranet Portal - SBP",
+                "Microsoft" ,
+                "Operating System" ,
+                "Windows Server" ,
+                "45578" ,
+                "Windows Server 2016 Standard 10.0.14393.5502" ,
+                ">36 Months" ,
+                "Francisco Aristeguieta Silva" ,
+                "Peru" ,
+                INVALID_CHARS ,
+                "Yes" ,
+                "No" ,
+                "Missing" ,
+                INVALID_CHARS,
+                INVALID_CHARS ,
+                INVALID_CHARS,
+                INVALID_CHARS ,
+                INVALID_CHARS,
+                INVALID_CHARS ,
+                INVALID_CHARS,
+                INVALID_CHARS ,
+                INVALID_CHARS,
+                INVALID_CHARS ,
+                INVALID_CHARS,
+                INVALID_CHARS ,
+                INVALID_CHARS ,
+                "No" ,
+                "Peru" ,
+                "No" ,
+                "false" ,
+                "Production" ,
+                "Prod,DR,UAT/QAT/Pre-PROD,IST,Dev");
+
+        // Act
+        Landing result = LandingStub.invalidCharsForOptional();
 
         //Assert
-        assertNotNull(landing.getUniqueComponentId());
-        assertEquals(validValues.get("uniqueComponentId"), landing.getUniqueComponentId());
+        assertNotNull(result.getUniqueComponentId());
+        assertEquals(expected.getUniqueComponentId(), result.getUniqueComponentId());
 
-        assertNotNull(landing.getApmCode());
-        assertEquals(validValues.get("apmCode"), landing.getApmCode());
+        assertNotNull(result.getApmCode());
+        assertEquals(expected.getApmCode(), result.getApmCode());
 
-        assertNotNull(landing.getAppName());
-        assertEquals(validValues.get("appName"), landing.getAppName());
+        assertNotNull(result.getAppName());
+        assertEquals(expected.getAppName(), result.getAppName());
 
-        assertNotNull(landing.getVendor());
-        assertEquals(validValues.get("vendor"), landing.getVendor());
+        assertNotNull(result.getVendor());
+        assertEquals(expected.getVendor(), result.getVendor());
 
-        assertNotNull(landing.getSwType());
-        assertEquals(validValues.get("swType"), landing.getSwType());
+        assertNotNull(result.getSwType());
+        assertEquals(expected.getSwType(), result.getSwType());
 
-        assertNotNull(landing.getSwName());
-        assertEquals(validValues.get("swName"), landing.getSwName());
+        assertNotNull(result.getSwName());
+        assertEquals(expected.getSwName(), result.getSwName());
 
-        assertNotNull(landing.getSwId());
-        assertEquals(Integer.parseInt(validValues.get("swId")), landing.getSwId());
+        assertNotNull(result.getSwId());
+        assertEquals(expected.getSwId(), result.getSwId());
 
-        assertNotNull(landing.getSwVersion());
-        assertEquals(validValues.get("swVersion"), landing.getSwVersion());
+        assertNotNull(result.getSwVersion());
+        assertEquals(expected.getSwVersion(), result.getSwVersion());
 
-        assertNotNull(landing.getSwExpireIn());
-        assertEquals(validValues.get("swExpireIn"), landing.getSwExpireIn());
+        assertNotNull(result.getSwExpireIn());
+        assertEquals(expected.getSwExpireIn(), result.getSwExpireIn());
 
-        assertNotNull(landing.getGroupHeadName());
-        assertEquals(validValues.get("groupHeadName"), landing.getGroupHeadName());
+        assertNotNull(result.getGroupHeadName());
+        assertEquals(expected.getGroupHeadName(), result.getGroupHeadName());
 
-        assertNotNull(landing.getBusinessLines());
-        assertEquals(validValues.get("businessLines"), landing.getBusinessLines());
+        assertNotNull(result.getBusinessLines());
+        assertEquals(expected.getBusinessLines(), result.getBusinessLines());
 
-        assertNull(landing.getDbrTier());
+        assertNull(result.getDbrTier());
 
-        assertNotNull(landing.getSwValidPlan());
-        assertTrue(landing.getSwValidPlan());
+        assertNotNull(result.getSwValidPlan());
+        assertTrue(result.getSwValidPlan());
 
-        assertNotNull(landing.getAppValidPlan());
-        assertFalse(landing.getAppValidPlan());
+        assertNotNull(result.getAppValidPlan());
+        assertFalse(result.getAppValidPlan());
 
-        assertNotNull(landing.getSwPlanStatus());
-        assertEquals(validValues.get("swPlanStatus"), landing.getSwPlanStatus());
+        assertNotNull(result.getSwPlanStatus());
+        assertEquals(expected.getSwPlanStatus(), result.getSwPlanStatus());
 
-        assertNull(landing.getPlanNo());
+        assertNull(result.getPlanNo());
 
-        assertNull(landing.getPlanName());
+        assertNull(result.getPlanName());
 
-        assertNull(landing.getPlanStartDate());
+        assertNull(result.getPlanStartDate());
 
-        assertNull(landing.getPlanEndDate());
+        assertNull(result.getPlanEndDate());
 
-        assertNull(landing.getPlanFunded());
+        assertNull(result.getPlanFunded());
 
-        assertNull(landing.getRefNumber());
+        assertNull(result.getRefNumber());
 
-        assertNull(landing.getPlanComments());
+        assertNull(result.getPlanComments());
 
-        assertNull(landing.getPlanExternalCost());
+        assertNull(result.getPlanExternalCost());
 
-        assertNull(landing.getPlanInternalCost());
+        assertNull(result.getPlanInternalCost());
 
-        assertNull(landing.getPlanLicenseCost());
+        assertNull(result.getPlanLicenseCost());
 
-        assertNull(landing.getEosDate());
+        assertNull(result.getEosDate());
 
-        assertNull(landing.getExtendedDate());
+        assertNull(result.getExtendedDate());
 
-        assertNull(landing.getExtendedCustomDate());
+        assertNull(result.getExtendedCustomDate());
 
-        assertNotNull(landing.getLocalRCMP());
-        assertFalse(landing.getLocalRCMP());
+        assertNotNull(result.getLocalRCMP());
+        assertFalse(result.getLocalRCMP());
 
-        assertNotNull(landing.getCountryName());
-        assertEquals(validValues.get("countryName"), landing.getCountryName());
+        assertNotNull(result.getCountryName());
+        assertEquals(expected.getCountryName(), result.getCountryName());
 
-        assertNotNull(landing.getInternetFacing());
-        assertFalse(landing.getInternetFacing());
+        assertNotNull(result.getInternetFacing());
+        assertFalse(result.getInternetFacing());
 
-        assertNotNull(landing.getUsFlag());
-        assertFalse(landing.getUsFlag());
+        assertNotNull(result.getUsFlag());
+        assertFalse(result.getUsFlag());
 
-        assertNotNull(landing.getLifecycle());
-        assertEquals(validValues.get("lifecycle"), landing.getLifecycle());
+        assertNotNull(result.getLifecycle());
+        assertEquals(expected.getLifecycle(), result.getLifecycle());
 
-        assertNotNull(landing.getEnvironments());
-        assertEquals(validValues.get("environments"), landing.getEnvironments());
+        assertNotNull(result.getEnvironments());
+        assertEquals(expected.getEnvironments(), result.getEnvironments());
     }
 
     @Test
     public void Given_invalid_values_for_required_data_When_try_to_create_Then_throw_an_exception() {
-        //Arrange
-        Map<String, String> invalidValues = LandingInvalidStub.invalidCharsForRequiredFields();
-
-        //Act and Assert
+        //Arrange, Act and Assert
         assertThrows(InvalidPropertyException.class,
-                () -> {  new Landing(
-                    invalidValues.get("uniqueComponentId"),
-                    invalidValues.get("apmCode"),
-                    invalidValues.get("appName"),
-                    invalidValues.get("vendor"),
-                    invalidValues.get("swType"),
-                    invalidValues.get("swName"),
-                    invalidValues.get("swId"),
-                    invalidValues.get("swVersion"),
-                    invalidValues.get("swExpireIn"),
-                    invalidValues.get("groupHeadName"),
-                    invalidValues.get("businessLines"),
-                    invalidValues.get("dbrTier"),
-                    invalidValues.get("swValidPlan"),
-                    invalidValues.get("appValidPlan"),
-                    invalidValues.get("swPlanStatus"),
-                    invalidValues.get("planNo"),
-                    invalidValues.get("planName"),
-                    invalidValues.get("planStartDate"),
-                    invalidValues.get("planEndDate"),
-                    invalidValues.get("planFunded"),
-                    invalidValues.get("refNumber"),
-                    invalidValues.get("planComments"),
-                    invalidValues.get("planExternalCost"),
-                    invalidValues.get("planInternalCost"),
-                    invalidValues.get("planLicenseCost"),
-                    invalidValues.get("eosDate"),
-                    invalidValues.get("extendedDate"),
-                    invalidValues.get("extendedCustomDate"),
-                    invalidValues.get("localRCMP"),
-                    invalidValues.get("countryName"),
-                    invalidValues.get("internetFacing"),
-                    invalidValues.get("usFlag"),
-                    invalidValues.get("lifecycle"),
-                    invalidValues.get("environments"));
-        });
+                LandingStub::invalidCharsForRequiredFields);
     }
 
     @Test
     public void Given_only_optional_data_When_try_to_create_Then_throw_an_exception() {
-        //Arrange
-        Map<String, String> invalidValues = LandingInvalidStub.onlyOptionalFields();
-
-        //Act and Assert
+        //Arrange, Act and Assert
         assertThrows(InvalidPropertyException.class,
-                () -> {  new Landing(
-                        invalidValues.get("uniqueComponentId"),
-                        invalidValues.get("apmCode"),
-                        invalidValues.get("appName"),
-                        invalidValues.get("vendor"),
-                        invalidValues.get("swType"),
-                        invalidValues.get("swName"),
-                        invalidValues.get("swId"),
-                        invalidValues.get("swVersion"),
-                        invalidValues.get("swExpireIn"),
-                        invalidValues.get("groupHeadName"),
-                        invalidValues.get("businessLines"),
-                        invalidValues.get("dbrTier"),
-                        invalidValues.get("swValidPlan"),
-                        invalidValues.get("appValidPlan"),
-                        invalidValues.get("swPlanStatus"),
-                        invalidValues.get("planNo"),
-                        invalidValues.get("planName"),
-                        invalidValues.get("planStartDate"),
-                        invalidValues.get("planEndDate"),
-                        invalidValues.get("planFunded"),
-                        invalidValues.get("refNumber"),
-                        invalidValues.get("planComments"),
-                        invalidValues.get("planExternalCost"),
-                        invalidValues.get("planInternalCost"),
-                        invalidValues.get("planLicenseCost"),
-                        invalidValues.get("eosDate"),
-                        invalidValues.get("extendedDate"),
-                        invalidValues.get("extendedCustomDate"),
-                        invalidValues.get("localRCMP"),
-                        invalidValues.get("countryName"),
-                        invalidValues.get("internetFacing"),
-                        invalidValues.get("usFlag"),
-                        invalidValues.get("lifecycle"),
-                        invalidValues.get("environments"));
-                });
+                LandingStub::onlyOptionalFields);
+
     }
 
     @Test
     public void Given_null_values_for_required_data_When_try_to_create_Then_throw_an_exception() {
-        //Arrange
-        Map<String, String> invalidValues = LandingInvalidStub.nullForRequiredFields();
-
-        //Act and Assert
+        //Arrange, Act and Assert
         assertThrows(InvalidPropertyException.class,
-                () -> {  new Landing(
-                        invalidValues.get("uniqueComponentId"),
-                        invalidValues.get("apmCode"),
-                        invalidValues.get("appName"),
-                        invalidValues.get("vendor"),
-                        invalidValues.get("swType"),
-                        invalidValues.get("swName"),
-                        invalidValues.get("swId"),
-                        invalidValues.get("swVersion"),
-                        invalidValues.get("swExpireIn"),
-                        invalidValues.get("groupHeadName"),
-                        invalidValues.get("businessLines"),
-                        invalidValues.get("dbrTier"),
-                        invalidValues.get("swValidPlan"),
-                        invalidValues.get("appValidPlan"),
-                        invalidValues.get("swPlanStatus"),
-                        invalidValues.get("planNo"),
-                        invalidValues.get("planName"),
-                        invalidValues.get("planStartDate"),
-                        invalidValues.get("planEndDate"),
-                        invalidValues.get("planFunded"),
-                        invalidValues.get("refNumber"),
-                        invalidValues.get("planComments"),
-                        invalidValues.get("planExternalCost"),
-                        invalidValues.get("planInternalCost"),
-                        invalidValues.get("planLicenseCost"),
-                        invalidValues.get("eosDate"),
-                        invalidValues.get("extendedDate"),
-                        invalidValues.get("extendedCustomDate"),
-                        invalidValues.get("localRCMP"),
-                        invalidValues.get("countryName"),
-                        invalidValues.get("internetFacing"),
-                        invalidValues.get("usFlag"),
-                        invalidValues.get("lifecycle"),
-                        invalidValues.get("environments"));
-                });
+                LandingStub::nullForRequiredFields);
     }
 
 }
