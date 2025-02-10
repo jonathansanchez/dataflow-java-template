@@ -2,6 +2,8 @@ package com.verix.apm.domain.model;
 
 import com.verix.apm.domain.model.Apm;
 import static org.junit.jupiter.api.Assertions.*;
+
+import com.verix.apm.domain.model.exception.InvalidPropertyException;
 import org.junit.jupiter.api.Test;
 
 public class ApmTest {
@@ -285,4 +287,89 @@ public class ApmTest {
 
         assertEquals(country, apm.getCountry());
     }
+
+
+    @Test
+    void Given_data_with_required_and_invalid_values_When_try_to_parse_invalid_to_empty_Then_throw_an_exception() {
+        //Arrange
+        String apmCode = EMPTY_STRING;
+        String apmName = "Leasing Financiero";
+        String isCompliant = EMPTY_STRING;
+        String cia = EMPTY_STRING;
+        String lcState = EMPTY_STRING;
+        String productionDate = EMPTY_STRING;
+        String retirementDate = "01-Jan-2050";
+        String dbrRating = EMPTY_STRING;
+        String applicationTested = EMPTY_STRING;
+        String applicationContact = EMPTY_STRING;
+        String manager = EMPTY_STRING;
+        String vp = "David Conboy";
+        String svp = EMPTY_STRING;
+        String portfolioOwner = "Judith Fuentes";
+        String iso = EMPTY_STRING;
+        String country = EMPTY_STRING;
+
+        //Act and Assert
+        assertThrows(InvalidPropertyException.class, () -> new Apm(
+                apmCode,
+                apmName,
+                isCompliant,
+                cia,
+                lcState,
+                LifeDate.create(productionDate),
+                LifeDate.create(retirementDate),
+                dbrRating,
+                applicationTested,
+                applicationContact,
+                manager,
+                vp,
+                svp,
+                portfolioOwner,
+                iso,
+                country)
+        );
+    }
+
+
+    @Test
+    void Given_data_with_required_and_null_values_When_try_to_parse_null_Then_throw_an_exception() {
+        //Arrange
+        String apmCode = null;
+        String apmName = "Leasing Financiero";
+        String isCompliant = null;
+        String cia = null;
+        String lcState = null;
+        String productionDate = null;
+        String retirementDate = "01-Jan-2050";
+        String dbrRating = null;
+        String applicationTested = null;
+        String applicationContact = null;
+        String manager = null;
+        String vp = "David Conboy";
+        String svp = null;
+        String portfolioOwner = null;
+        String iso = null;
+        String country = null;
+
+        //Act and Assert
+        assertThrows(InvalidPropertyException.class, () -> new Apm(
+                apmCode,
+                apmName,
+                isCompliant,
+                cia,
+                lcState,
+                LifeDate.create(productionDate),
+                LifeDate.create(retirementDate),
+                dbrRating,
+                applicationTested,
+                applicationContact,
+                manager,
+                vp,
+                svp,
+                portfolioOwner,
+                iso,
+                country)
+        );
+    }
+
 }

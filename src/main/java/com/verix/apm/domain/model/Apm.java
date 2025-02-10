@@ -63,7 +63,7 @@ public class Apm implements Serializable {
     public String setApmName(String apmName){return removeSpecialCharsForOptional(apmName);}
 
     public Boolean getIsCompliant() { return isCompliant; }
-    public Boolean setIsCompliant(String isCompliant){return BooleanCleaner(isCompliant);}
+    public Boolean setIsCompliant(String isCompliant){return BooleanCleanerRequired(isCompliant);}
 
     public Boolean getCia() { return cia; }
     public Boolean setCia(String cia){return BooleanCleaner(cia);}
@@ -109,6 +109,7 @@ public class Apm implements Serializable {
     private String removeSpecialCharsForRequired(String value) {
         return Optional
                 .ofNullable(value)
+                .filter(v -> !v.trim().isEmpty())
                 .orElseThrow(InvalidPropertyException::thrown)
                 .trim()
                 .replaceAll(REGEX_SPECIAL_CHARS, REPLACEMENT)
@@ -146,4 +147,18 @@ public class Apm implements Serializable {
                 })
                 .orElse(null);
     }
+
+    private static Boolean BooleanCleanerRequired(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            throw InvalidPropertyException.thrown();
+        }
+
+        String lowerCase = value.trim().toLowerCase();
+        return switch (lowerCase) {
+            case "yes", "true" -> true;
+            case "no", "false" -> false;
+            default -> throw InvalidPropertyException.thrown();
+        };
+    }
+
 }

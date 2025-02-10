@@ -10,9 +10,8 @@ public class LifeDate implements Serializable {
 
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("dd-MMM-yyyy", Locale.ROOT);
     private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-    // elimina todo excepto letras, numeros y guiones
     private static final String REGEX_CLEANUP = "[^a-zA-Z0-9-]";
+    private static final String EMPTY_STRING = "";
 
     private final String value;
 
@@ -29,7 +28,7 @@ public class LifeDate implements Serializable {
             return Optional.ofNullable(value)
                     .map(String::trim)
                     .filter(s -> !s.isEmpty())
-                    .map(s -> s.replaceAll(REGEX_CLEANUP, ""))
+                    .map(s -> s.replaceAll(REGEX_CLEANUP, EMPTY_STRING))
                     .filter(s -> !s.isEmpty()) // Si después de limpiar queda vacío, devuelve null
                     .map(s -> LocalDate.parse(s, INPUT_FORMAT).format(OUTPUT_FORMAT))
                     .orElse(null);
