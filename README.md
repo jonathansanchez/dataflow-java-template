@@ -22,6 +22,11 @@ export PROJECT="[GCP_PROJECT_NAME]"
 export DATASET="[DATASET.TABLE_NAME]"
 ```
 
+#### Create the Artifact:
+```shell
+gcloud artifacts repositories create $REPOSITORY --repository-format=docker --location=$REGION
+```
+
 #### Create the template:
 ```shell
 gcloud dataflow flex-template build gs://$BUCKET/sam/templates/sam.json \
@@ -38,5 +43,5 @@ gcloud dataflow flex-template build gs://$BUCKET/sam/templates/sam.json \
 gcloud dataflow flex-template run "sam"  \
     --template-file-gcs-location "gs://$BUCKET/sam/templates/sam.json" \
     --region $REGION \
-    --parameters input=gs://$BUCKET/sam/data/20250127/sam.csv,output=$DATASET,temp=gs://$BUCKET/sam/data/temp-files
+    --parameters input=gs://$BUCKET/sam/data/sam.csv,output=$DATASET,temp=gs://$BUCKET/sam/data/temp-files,tempLocation=gs://$BUCKET/sam/temp-files,stagingLocation=gs://$BUCKET/sam/temp-files
 ```
