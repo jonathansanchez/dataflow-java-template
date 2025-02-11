@@ -47,7 +47,7 @@ public class Sam implements Serializable {
     }
 
     public String setPublisher(String publisher) {
-        return removeSpecialCharsForRequired(publisher);
+        return removeSpecialCharsForOptional(publisher);
     }
 
     public String getCategory() {

@@ -4,19 +4,23 @@ import com.verix.sam.domain.model.LifeDate;
 import com.verix.sam.domain.model.Sam;
 import org.apache.beam.sdk.transforms.DoFn;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class StringToSamTransformation extends DoFn<String, Sam> {
 
     private static final String COMMA = ",";
+    public static final String REGEX_SPLIT = "([^\",]+|\"[^\"]*\")*,?";
+    public static final String QUOTES = "\"";
 
     @ProcessElement
     public void processElement(@Element String line, OutputReceiver<Sam> out) {
         List<String> splitValue = Optional
                 .ofNullable(line)
-                .map(s -> Arrays.asList(s.trim().split(COMMA)))
+                .map(this::splitByCommaIgnoringQuotes)
                 .orElseThrow(RuntimeException::new);
 
         out.output(new Sam(
@@ -35,5 +39,29 @@ public class StringToSamTransformation extends DoFn<String, Sam> {
                 LifeDate.create(splitValue.get(12)),
                 splitValue.get(13))
         );
+    }
+
+    private List<String> splitByCommaIgnoringQuotes(String element) {
+        Pattern pattern = Pattern.compile(REGEX_SPLIT);
+        Matcher matcher = pattern.matcher(element);
+
+        return Stream.generate(() -> {
+                    if (matcher.find()) {
+                        return matcher.group();
+                    }
+                    return null;
+                })
+                .takeWhile(Objects::nonNull)
+                .filter(match -> !match.isEmpty())
+                .map(match -> {
+                    if (match.endsWith(COMMA)) {
+                        match = match.substring(0, match.length() - 1);
+                    }
+                    if (match.startsWith(QUOTES) && match.endsWith(QUOTES)) {
+                        match = match.substring(1, match.length() - 1);
+                    }
+                    return match;
+                })
+                .collect(Collectors.toList());
     }
 }
