@@ -111,7 +111,7 @@ class SamTest {
     @Test
     void Given_data_with_optional_values_When_try_to_create_Then_create_a_valid_sam() {
         //Arrange
-        String publisher = "Microsoft";
+        String publisher = EMPTY_STRING;
         String category = "Data Integration";
         String product = "SQL Server Integration Services";
         String productVersion = "SQL Server Integration Services 2014 Standard 12.0.2456.0";
@@ -143,9 +143,7 @@ class SamTest {
                 source);
 
         //Assert
-        assertNotNull(sam.getPublisher());
-        assertNotEquals(EMPTY_STRING, sam.getPublisher());
-        assertEquals(publisher, sam.getPublisher());
+        assertNull(sam.getPublisher());
 
         assertNotNull(sam.getCategory());
         assertNotEquals(EMPTY_STRING, sam.getCategory());
@@ -184,7 +182,7 @@ class SamTest {
     @Test
     void Given_data_with_optional_and_invalid_values_When_try_to_create_Then_create_a_valid_sam() {
         //Arrange
-        String publisher = "Microsoft";
+        String publisher = INVALID_CHAR;
         String category = "Data Integration";
         String product = "SQL Server Integration Services";
         String productVersion = "SQL Server Integration Services 2014 Standard 12.0.2456.0";
@@ -216,9 +214,7 @@ class SamTest {
                 source);
 
         //Assert
-        assertNotNull(sam.getPublisher());
-        assertNotEquals(EMPTY_STRING, sam.getPublisher());
-        assertEquals(publisher, sam.getPublisher());
+        assertNull(sam.getPublisher());
 
         assertNotNull(sam.getCategory());
         assertNotEquals(EMPTY_STRING, sam.getCategory());
@@ -259,7 +255,7 @@ class SamTest {
     @Test
     void Given_data_with_required_values_When_try_to_create_Then_throw_an_exception() {
         //Arrange
-        String publisher = EMPTY_STRING;
+        String publisher = "Microsoft";
         String category = EMPTY_STRING;
         String product = EMPTY_STRING;
         String productVersion = EMPTY_STRING;
@@ -295,7 +291,7 @@ class SamTest {
     @Test
     void Given_data_with_required_and_invalid_values_When_try_to_parse_invalid_to_empty_Then_throw_an_exception() {
         //Arrange
-        String publisher = INVALID_CHAR;
+        String publisher = EMPTY_STRING;
         String category = INVALID_CHAR;
         String product = INVALID_CHAR;
         String productVersion = INVALID_CHAR;
@@ -331,7 +327,7 @@ class SamTest {
     @Test
     void Given_data_with_required_and_null_values_When_try_to_parse_null_Then_throw_an_exception() {
         //Arrange
-        String publisher = null;
+        String publisher = EMPTY_STRING;
         String category = null;
         String product = null;
         String productVersion = null;
