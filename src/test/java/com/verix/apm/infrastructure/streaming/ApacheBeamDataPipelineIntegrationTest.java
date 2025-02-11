@@ -31,21 +31,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ApacheBeamDataPipelineIntegrationTest {
 
-/*    private static final String PROJECT_ID      = "PROJECT_ID";
+    private static final String PROJECT_ID      = "PROJECT_ID";
     private static final String BUCKET_NAME     = "BUCKET_NAME";
     private static final String TEMP_LOCATION   = "gs://" + BUCKET_NAME + "/temp-files";
     private static final String CSV_FILE_NAME   = "CSV_FILE_NAME.csv";
     private static final String INPUT_FILE      = "gs://" + BUCKET_NAME + "/data/" + CSV_FILE_NAME;
     private static final String DATASET_NAME    = "DATASET_NAME";
-    private static final String TABLE_NAME      = "TABLE_NAME";*/
-
-    private static final String PROJECT_ID      = "scotiabank-development";
-    private static final String BUCKET_NAME     = "bucket-swc-test";
-    private static final String TEMP_LOCATION   = "gs://" + BUCKET_NAME + "/apm/temp-files";
-    private static final String CSV_FILE_NAME   = "apm_corto.csv";
-    private static final String INPUT_FILE      = "gs://" + BUCKET_NAME + "/apm/data/" + CSV_FILE_NAME;
-    private static final String DATASET_NAME    = "dataset_swc_test";
-    private static final String TABLE_NAME      = "apm_test";
+    private static final String TABLE_NAME      = "TABLE_NAME";
 
     private static JobOptions jobOptions;
     private static BigQuery bigQuery;

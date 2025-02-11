@@ -38,9 +38,9 @@ public final class DIContainer {
                 .withValidation()
                 .as(JobOptions.class);
 
-        options.setInput(System.getenv("INPUT_PATH"));
+/*        options.setInput(System.getenv("INPUT_PATH"));
         options.setOutputTable(System.getenv("GCP_TABLE"));
-        options.setTempBucket(System.getenv("TEMP_LOCATION"));
+        options.setTempBucket(System.getenv("TEMP_LOCATION"));*/
 
         // Pais
 /*        options.setCl(System.getenv("CL"));
