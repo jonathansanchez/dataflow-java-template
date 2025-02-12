@@ -23,8 +23,8 @@ public class BigQueryRepository {
                 .to(options.getOutput())
                 .withSchema(samTableSchema.create())
                 .withCustomGcsTempLocation(ValueProvider.StaticValueProvider.of(options.getTempLocation()))
-                //.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE)
-                .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND)
+                .withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE)
+                //.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND)
                 .withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_IF_NEEDED);
     }
 }

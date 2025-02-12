@@ -21,19 +21,21 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ApacheBeamDataPipelineIntegrationTest {
 
-    private static final String PROJECT_ID      = "PROJECT_ID";
-    private static final String BUCKET_NAME     = "BUCKET_NAME";
+    private static final String PROJECT_ID      = System.getenv("PROJECT_ID");
+    private static final String BUCKET_NAME     = System.getenv("BUCKET_NAME");
     private static final String TEMP_LOCATION   = "gs://" + BUCKET_NAME + "/temp-files";
-    private static final String CSV_FILE_NAME   = "CSV_FILE_NAME.csv";
+    private static final String CSV_FILE_NAME   = "sam_it_test.csv";
     private static final String INPUT_FILE      = "gs://" + BUCKET_NAME + "/data/" + CSV_FILE_NAME;
-    private static final String DATASET_NAME    = "DATASET_NAME";
-    private static final String TABLE_NAME      = "TABLE_NAME";
+    private static final String DATASET_NAME    = System.getenv("DATASET_NAME");
+    private static final String TABLE_NAME      = System.getenv("TABLE_NAME");
 
     private static JobOptions options;
     private static BigQuery bigQuery;
@@ -79,7 +81,10 @@ class ApacheBeamDataPipelineIntegrationTest {
                 Field.of("publisher_end_of_life", StandardSQLTypeName.DATE),
                 Field.of("source", StandardSQLTypeName.STRING)
         );
-        TableDefinition tableDefinition = StandardTableDefinition.of(schema);
+        List<String> clusteringFields = Arrays.asList("category", "product", "product_version");
+        //TableDefinition tableDefinition = StandardTableDefinition.of(schema);
+        Clustering clustering = Clustering.newBuilder().setFields(clusteringFields).build();
+        StandardTableDefinition tableDefinition = StandardTableDefinition.newBuilder().setSchema(schema).setClustering(clustering).build();
         TableInfo tableInfo = TableInfo.newBuilder(tableId, tableDefinition).build();
         bigQuery.create(tableInfo);
     }
@@ -95,7 +100,7 @@ class ApacheBeamDataPipelineIntegrationTest {
 
         pipeline.run();
         AtomicInteger rowCount = countResult();
-        assertEquals(10, rowCount.get());
+        assertEquals(1, rowCount.get());
     }
 
     @Test
@@ -103,6 +108,7 @@ class ApacheBeamDataPipelineIntegrationTest {
         Pipeline pipeline = Pipeline.create(options);
 
         PCollection<String> rawData = pipeline.apply("Extract: Read CSV File", TextIO.read().withSkipHeaderLines(1).from(options.getInput()));
+        //PCollection<String> rawData = pipeline.apply("Extract: Read CSV File", TextIO.read().withSkipHeaderLines(1).from("src/main/resources/sam_it_test.csv"));
 
         PCollection<String> cleanedLines = rawData.apply("Transform: Sanitization line breaks", ParDo.of(removeLineBreaksTransformation));
 
@@ -116,7 +122,7 @@ class ApacheBeamDataPipelineIntegrationTest {
 
         // Count data from BigQuery
         AtomicInteger rowCount = countResult();
-        assertEquals(20, rowCount.get());
+        assertEquals(1, rowCount.get());
     }
 
     @NotNull
