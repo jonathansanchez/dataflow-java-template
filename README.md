@@ -27,8 +27,11 @@ export DATASET="[DATASET.TABLE_NAME]"
 ### Set environment variables for testing:
 ```shell
 export PROJECT_ID="[GCP_PROJECT_NAME]"
-export BUCKET_NAME="[BUCKET_NAME]/apm"
-export DATASET_NAME="[DATASET]"
+export BUCKET_NAME="[BUCKET_NAME]"
+export TEMP_LOCATION="gs://" + BUCKET_NAME + "/apm/temp-files";
+export CSV_FILE_NAME="[CSV_FILE_NAME]"
+export INPUT_FILE="gs://" + BUCKET_NAME + "/apm/data/" + CSV_FILE_NAME;
+export DATASET_NAME="[DATASET_NAME]"
 export TABLE_NAME="[TABLE_NAME]"
 ```
 

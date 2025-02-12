@@ -7,7 +7,7 @@ import com.google.cloud.bigquery.*;
 import com.google.cloud.bigquery.BigQuery;
 import com.google.cloud.bigquery.BigQueryOptions;
 import com.google.cloud.bigquery.TableId;
-import com.google.cloud.bigquery.*;
+
 
 
 import com.verix.apm.domain.model.Apm;
@@ -26,6 +26,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -39,10 +41,9 @@ class ApacheBeamDataPipelineIntegrationTest {
     private static final String DATASET_NAME    = "DATASET_NAME";
     private static final String TABLE_NAME      = "TABLE_NAME";
 
+
     private static JobOptions jobOptions;
     private static BigQuery bigQuery;
-
-
     private static ApmTableSchema schema;
     private static FilterEmptyRowsFn filterEmptyRowsFn;
     private static ReplaceCommasInQuotesFn replaceCommasInQuotesFn;
@@ -96,7 +97,9 @@ class ApacheBeamDataPipelineIntegrationTest {
                 Field.of("iso", StandardSQLTypeName.STRING),
                 Field.of("country", StandardSQLTypeName.STRING)
         );
-        TableDefinition tableDefinition = StandardTableDefinition.of(schema);
+        List<String> clusteringFields = Arrays.asList("apm_code", "cia", "country","vp");
+        Clustering clustering = Clustering.newBuilder().setFields(clusteringFields).build();
+        StandardTableDefinition tableDefinition = StandardTableDefinition.newBuilder().setSchema(schema).setClustering(clustering).build();
         TableInfo tableInfo = TableInfo.newBuilder(tableId, tableDefinition).build();
         bigQuery.create(tableInfo);
     }
