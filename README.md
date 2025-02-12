@@ -13,13 +13,21 @@ Use Case:
 
 ### Instructions:
 
-#### Set environment variables:
+#### Set environment variables for build:
 ```shell
 export REGION="us-central1"
 export REPOSITORY="forecast-repository"
 export BUCKET="[BUCKET_NAME]"
 export PROJECT="[GCP_PROJECT_NAME]"
 export DATASET="[DATASET.TABLE_NAME]"
+```
+
+#### Set environment variables for testing:
+```shell
+export PROJECT_ID="[GCP_PROJECT_NAME]"
+export BUCKET_NAME="[BUCKET_NAME]/forecast"
+export DATASET_NAME="[DATASET]"
+export TABLE_NAME="[TABLE_NAME]"
 ```
 
 #### Create the Artifact:

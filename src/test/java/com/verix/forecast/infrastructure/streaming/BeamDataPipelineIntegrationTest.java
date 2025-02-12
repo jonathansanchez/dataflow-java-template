@@ -21,19 +21,21 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BeamDataPipelineIntegrationTest {
 
-    private static final String PROJECT_ID      = "PROJECT_ID";
-    private static final String BUCKET_NAME     = "BUCKET_NAME";
-    private static final String TEMP_LOCATION   = "gs://" + BUCKET_NAME + "/temp-files";
-    private static final String CSV_FILE_NAME   = "CSV_FILE_NAME.csv";
-    private static final String INPUT_FILE      = "gs://" + BUCKET_NAME + "/data/" + CSV_FILE_NAME;
-    private static final String DATASET_NAME    = "DATASET_NAME";
-    private static final String TABLE_NAME      = "TABLE_NAME";
+    private static final String PROJECT_ID    = System.getenv("PROJECT_ID");
+    private static final String BUCKET_NAME   = System.getenv("BUCKET_NAME");
+    private static final String TEMP_LOCATION = "gs://" + BUCKET_NAME + "/temp-files";
+    private static final String CSV_FILE_NAME = "forecast_it_test.csv";
+    private static final String INPUT_FILE    = "gs://" + BUCKET_NAME + "/data/" + CSV_FILE_NAME;
+    private static final String DATASET_NAME  = System.getenv("DATASET_NAME");
+    private static final String TABLE_NAME    = System.getenv("TABLE_NAME");
 
     private static JobOptions options;
     private static BigQuery bigQuery;
@@ -72,7 +74,12 @@ class BeamDataPipelineIntegrationTest {
                 Field.newBuilder("new_version", StandardSQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build(),
                 Field.of("delivery_date", StandardSQLTypeName.DATE)
         );
-        TableDefinition tableDefinition = StandardTableDefinition.of(schema);
+        TimePartitioning timePartitioning = TimePartitioning.newBuilder(TimePartitioning.Type.MONTH)
+                .setField("delivery_date")
+                .build();
+        List<String> clusteringFields = Arrays.asList("apm_code", "component", "version", "action");
+        Clustering clustering = Clustering.newBuilder().setFields(clusteringFields).build();
+        StandardTableDefinition tableDefinition = StandardTableDefinition.newBuilder().setSchema(schema).setTimePartitioning(timePartitioning).setClustering(clustering).build();
         TableInfo tableInfo = TableInfo.newBuilder(tableId, tableDefinition).build();
         bigQuery.create(tableInfo);
     }
@@ -88,7 +95,7 @@ class BeamDataPipelineIntegrationTest {
 
         pipeline.run();
         AtomicInteger rowCount = countResult();
-        assertEquals(10, rowCount.get());
+        assertEquals(102, rowCount.get());
     }
 
     @Test
@@ -110,7 +117,7 @@ class BeamDataPipelineIntegrationTest {
 
         // Count data from BigQuery
         AtomicInteger rowCount = countResult();
-        assertEquals(10, rowCount.get());
+        assertEquals(102, rowCount.get());
     }
 
     @NotNull
