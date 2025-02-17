@@ -20,20 +20,22 @@ public class Portfolio implements Serializable {
     private final LocalDate createdAt;
 
     public Portfolio(String country, LocalDate date, Integer total, Integer expired, Integer expiring) {
-        this.country = country;
-        this.date = LocalDate.parse(date.format(FORMAT));
-        this.total = total;
-        this.expired = expired;
-        this.expiring = expiring;
-        this.expiredKri = calculateKri(expired, total);
+        this.country     = country;
+        this.date        = LocalDate.parse(date.format(FORMAT));
+        this.total       = total;
+        this.expired     = expired;
+        this.expiring    = expiring;
+        this.expiredKri  = calculateKri(expired, total);
         this.expiringKri = calculateKri(expiring, total);
-        this.createdAt = setCreatedAt();
+        this.createdAt   = setCreatedAt();
     }
 
     private BigDecimal calculateKri(Integer components, Integer total) {
         BigDecimal numerator   = new BigDecimal(components);
         BigDecimal denominator = new BigDecimal(total);
-        return numerator.multiply(new BigDecimal("100"))
+
+        return numerator
+                .multiply(new BigDecimal("100"))
                 .divide(denominator, 2, RoundingMode.HALF_UP);
     }
 
