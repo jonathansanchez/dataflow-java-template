@@ -1,6 +1,6 @@
 package com.verix.forecast.application.service;
 
-import com.verix.forecast.domain.model.DataPipeline;
+import com.verix.forecast.domain.model.DataPipelineReader;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,7 +16,7 @@ class StreamingServiceTest {
     private StreamingService service;
 
     @Mock
-    private DataPipeline pipeline;
+    private DataPipelineReader pipeline;
 
     @Test
     void Given_a_pipeline_service_When_try_to_run_Then_call_to_concrete_pipeline() {
