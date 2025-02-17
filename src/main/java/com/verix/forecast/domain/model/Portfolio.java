@@ -9,6 +9,8 @@ import java.util.Locale;
 
 public class Portfolio implements Serializable {
     private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd").withLocale(Locale.ROOT);
+    private static final String PERCENT = "100";
+    private static final int ALLOWED_DECIMALS = 2;
 
     private final String country;
     private final LocalDate date;
@@ -35,8 +37,8 @@ public class Portfolio implements Serializable {
         BigDecimal denominator = new BigDecimal(total);
 
         return numerator
-                .multiply(new BigDecimal("100"))
-                .divide(denominator, 2, RoundingMode.HALF_UP);
+                .multiply(new BigDecimal(PERCENT))
+                .divide(denominator, ALLOWED_DECIMALS, RoundingMode.HALF_UP);
     }
 
     public String getCountry() {
