@@ -1,5 +1,5 @@
 package com.verix.forecast.domain.model;
 
-public interface DataPipeline {
+public interface DataPipelineReader {
     void run();
 }
