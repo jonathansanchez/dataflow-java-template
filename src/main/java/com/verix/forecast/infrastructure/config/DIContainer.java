@@ -1,13 +1,14 @@
 package com.verix.forecast.infrastructure.config;
 
 import com.google.api.services.bigquery.model.TableSchema;
+import com.verix.forecast.application.service.ForecastService;
 import com.verix.forecast.application.service.StreamingService;
 import com.verix.forecast.infrastructure.repository.BigQueryRepository;
-import com.verix.forecast.infrastructure.repository.model.RemediationTableSchema;
-import com.verix.forecast.infrastructure.streaming.BeamDataPipeline;
-import com.verix.forecast.infrastructure.streaming.transformation.RemediationToTableRow;
-import com.verix.forecast.infrastructure.streaming.transformation.RemoveLineBreaksTransformation;
-import com.verix.forecast.infrastructure.streaming.transformation.StringToRemediationTransformation;
+import com.verix.forecast.infrastructure.repository.model.PortfolioTableSchema;
+import com.verix.forecast.infrastructure.streaming.BeamDataPipelineReader;
+import com.verix.forecast.infrastructure.streaming.BeamDataPipelineWriter;
+import com.verix.forecast.infrastructure.streaming.transformation.PortfolioToTableRow;
+import com.verix.forecast.infrastructure.streaming.transformation.TableRowToComponent;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 
@@ -40,21 +41,26 @@ public final class DIContainer {
 
         container.register("job_options", options);
         container.register("table_schema", new TableSchema());
-        container.register("remediation_table_schema", new RemediationTableSchema(container.resolve("table_schema")));
-        container.register("big_query_repository", new BigQueryRepository(container.resolve("job_options"), container.resolve("remediation_table_schema")));
-        container.register("pipeline", Pipeline.create(container.resolve("job_options")));
-        container.register("remove_line_breaks_transformation", new RemoveLineBreaksTransformation());
-        container.register("string_to_remediation_transformation", new StringToRemediationTransformation());
-        container.register("remediation_to_table_row_transformation", new RemediationToTableRow());
-        container.register("apache_beam_pipeline", new BeamDataPipeline(
-                container.resolve("job_options"),
-                container.resolve("pipeline"),
+        container.register("portfolio_table_schema", new PortfolioTableSchema(container.resolve("table_schema")));
+        container.register("big_query_repository", new BigQueryRepository(container.resolve("job_options"), container.resolve("portfolio_table_schema")));
+        container.register("pipeline_reader", Pipeline.create(container.resolve("job_options")));
+        container.register("pipeline_writer", Pipeline.create(container.resolve("job_options")));
+        container.register("portfolio_to_table_row_transformation", new PortfolioToTableRow());
+        container.register("table_row_to_component_transformation", new TableRowToComponent());
+
+        container.register("apache_beam_pipeline_writer", new BeamDataPipelineWriter(
+                container.resolve("pipeline_writer"),
                 container.resolve("big_query_repository"),
-                container.resolve("remove_line_breaks_transformation"),
-                container.resolve("string_to_remediation_transformation"),
-                container.resolve("remediation_to_table_row_transformation"))
+                container.resolve("portfolio_to_table_row_transformation"))
         );
-        container.register("streaming_service", new StreamingService(container.resolve("apache_beam_pipeline")));
+        container.register("forecast_service", new ForecastService(container.resolve("apache_beam_pipeline_writer")));
+        container.register("apache_beam_pipeline_reader", new BeamDataPipelineReader(
+                container.resolve("pipeline_reader"),
+                container.resolve("big_query_repository"),
+                container.resolve("table_row_to_component_transformation"),
+                container.resolve("forecast_service"))
+        );
+        container.register("streaming_service", new StreamingService(container.resolve("apache_beam_pipeline_reader")));
 
         //Init
         StreamingService streamingService = container.resolve("streaming_service");

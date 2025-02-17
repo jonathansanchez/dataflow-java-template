@@ -4,6 +4,10 @@ import org.apache.beam.sdk.options.Description;
 import org.apache.beam.sdk.options.PipelineOptions;
 
 public interface JobOptions extends PipelineOptions {
+    @Description("Country for the pipeline")
+    String getCountry();
+    void setCountry(String country);
+
     @Description("Input for the pipeline")
     String getInput();
     void setInput(String input);
