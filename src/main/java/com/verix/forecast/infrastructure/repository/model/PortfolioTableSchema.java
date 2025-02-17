@@ -5,13 +5,12 @@ import com.google.api.services.bigquery.model.TableSchema;
 
 import java.util.Arrays;
 
-import static com.google.cloud.bigquery.storage.v1.TableFieldSchema.Type.DATE;
-import static com.google.cloud.bigquery.storage.v1.TableFieldSchema.Type.STRING;
+import static com.google.cloud.bigquery.storage.v1.TableFieldSchema.Type.*;
 
-public class RemediationTableSchema {
+public class PortfolioTableSchema {
     private final TableSchema schema;
 
-    public RemediationTableSchema(TableSchema schema) {
+    public PortfolioTableSchema(TableSchema schema) {
         this.schema = schema;
     }
 
@@ -20,30 +19,35 @@ public class RemediationTableSchema {
                 .setFields(
                         Arrays.asList(
                                 new TableFieldSchema()
-                                        .setName("strategy")
+                                        .setName("country")
                                         .setType(STRING.name())
                                         .setMode("REQUIRED"),
                                 new TableFieldSchema()
-                                        .setName("apm_code")
-                                        .setType(STRING.name())
+                                        .setName("portfolio_date")
+                                        .setType(DATE.name())
                                         .setMode("REQUIRED"),
                                 new TableFieldSchema()
-                                        .setName("component")
-                                        .setType(STRING.name())
+                                        .setName("expired")
+                                        .setType(INT64.name())
                                         .setMode("REQUIRED"),
                                 new TableFieldSchema()
-                                        .setName("version")
-                                        .setType(STRING.name())
+                                        .setName("expired_kri")
+                                        .setType(NUMERIC.name())
                                         .setMode("REQUIRED"),
                                 new TableFieldSchema()
-                                        .setName("action")
-                                        .setType(STRING.name())
+                                        .setName("expiring")
+                                        .setType(INT64.name())
                                         .setMode("REQUIRED"),
                                 new TableFieldSchema()
-                                        .setName("new_version")
-                                        .setType(STRING.name()),
+                                        .setName("expiring_kri")
+                                        .setType(NUMERIC.name())
+                                        .setMode("REQUIRED"),
                                 new TableFieldSchema()
-                                        .setName("delivery_date")
+                                        .setName("total")
+                                        .setType(INT64.name())
+                                        .setMode("REQUIRED"),
+                                new TableFieldSchema()
+                                        .setName("created_at")
                                         .setType(DATE.name())
                                         .setMode("REQUIRED")
                         )
