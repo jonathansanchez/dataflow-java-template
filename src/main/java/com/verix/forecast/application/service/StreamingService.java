@@ -1,11 +1,11 @@
 package com.verix.forecast.application.service;
 
-import com.verix.forecast.domain.model.DataPipeline;
+import com.verix.forecast.domain.model.DataPipelineReader;
 
 public class StreamingService {
-    private final DataPipeline pipeline;
+    private final DataPipelineReader pipeline;
 
-    public StreamingService(DataPipeline pipeline) {
+    public StreamingService(DataPipelineReader pipeline) {
         this.pipeline = pipeline;
     }
 
