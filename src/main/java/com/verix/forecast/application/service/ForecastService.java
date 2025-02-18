@@ -5,16 +5,13 @@ import com.verix.forecast.domain.model.DataPipelineWriter;
 import com.verix.forecast.domain.model.Portfolio;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Stream;
 
 public class ForecastService {
 
-    private static final DateTimeFormatter FORMAT_TO_COMPARE = DateTimeFormatter.ofPattern("yyyy-MM-dd").withLocale(Locale.ROOT);
     private static final int YEARS_TO_ADD  = 2;
     private static final int MONTHS_TO_ADD = 1;
 
@@ -31,8 +28,8 @@ public class ForecastService {
         ArrayList<Portfolio> portfolios      = new ArrayList<>();
 
         dates.forEach(portfolioDate -> {
-            Integer expired  = getExpiredComponentsByDate(componentList, portfolioDate);
-            Integer expiring = getExpiringComponentsByDate(componentList, portfolioDate);
+            Integer expired  = countExpiredComponentsByDate(componentList, portfolioDate);
+            Integer expiring = countExpiringComponentsByDate(componentList, portfolioDate);
             portfolios.add(new Portfolio(country, portfolioDate, totalComponents, expired, expiring));
         });
 
@@ -62,26 +59,20 @@ public class ForecastService {
                 .getCountry();
     }
 
-    private Integer getExpiringComponentsByDate(List<Component> componentList, LocalDate portfolioDate) {
+    private Integer countExpiringComponentsByDate(List<Component> componentList, LocalDate portfolioDate) {
         long expiring = componentList
                 .stream()
                 .filter(Component::hasEol)
-                .filter(component -> {
-                    LocalDate date = LocalDate.parse(LocalDate.parse(component.getEol().getValue()).format(FORMAT_TO_COMPARE));
-                    return date.isAfter(portfolioDate) && !date.isEqual(portfolioDate) && (date.isBefore(portfolioDate.plusYears(YEARS_TO_ADD)) || date.isEqual(portfolioDate.plusYears(YEARS_TO_ADD)));
-                })
+                .filter(component -> component.eolIsBetweenTwoYears(portfolioDate))
                 .count();
         return Math.toIntExact(expiring);
     }
 
-    private Integer getExpiredComponentsByDate(List<Component> componentList, LocalDate portfolioDate) {
+    private Integer countExpiredComponentsByDate(List<Component> componentList, LocalDate portfolioDate) {
         long expired = componentList
                 .stream()
                 .filter(Component::hasEol)
-                .filter(component -> {
-                    LocalDate date = LocalDate.parse(LocalDate.parse(component.getEol().getValue()).format(FORMAT_TO_COMPARE));
-                    return date.isEqual(portfolioDate) || date.isBefore(portfolioDate);
-                })
+                .filter(component -> component.eolIsExpired(portfolioDate))
                 .count();
         return Math.toIntExact(expired);
     }
