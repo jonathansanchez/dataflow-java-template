@@ -44,4 +44,11 @@ public class DeliveryDate implements Serializable {
     public String getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "DeliveryDate{" +
+                "value='" + value + '\'' +
+                '}';
+    }
 }

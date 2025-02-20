@@ -11,6 +11,7 @@ public class Remediation implements Serializable {
     private static final String REPLACEMENT = "";
 
     private final String strategy;
+    private final Country countryCode;
     private final String apmCode;
     private final String component;
     private final String version;
@@ -18,13 +19,14 @@ public class Remediation implements Serializable {
     private final String newVersion;
     private final DeliveryDate deliveryDate;
 
-    public Remediation(String strategy, String apmCode, String component, String version, Action action, String newVersion, DeliveryDate deliveryDate) {
-        this.strategy = setStrategy(strategy);
-        this.apmCode = setApmCode(apmCode);
-        this.component = setComponent(component);
-        this.version = setVersion(version);
-        this.action = setAction(action);
-        this.newVersion = setNewVersion(newVersion);
+    public Remediation(String strategy, Country countryCode, String apmCode, String component, String version, Action action, String newVersion, DeliveryDate deliveryDate) {
+        this.strategy     = setStrategy(strategy);
+        this.countryCode  = setCountryCode(countryCode);
+        this.apmCode      = setApmCode(apmCode);
+        this.component    = setComponent(component);
+        this.version      = setVersion(version);
+        this.action       = setAction(action);
+        this.newVersion   = setNewVersion(newVersion);
         this.deliveryDate = setDeliveryDate(deliveryDate);
     }
 
@@ -34,6 +36,14 @@ public class Remediation implements Serializable {
 
     private String setStrategy(String strategy) {
         return removeSpecialCharsForRequired(strategy);
+    }
+
+    public Country setCountryCode(Country countryCode) {
+        return countryCode;
+    }
+
+    public Country getCountryCode() {
+        return countryCode;
     }
 
     public String getApmCode() {
@@ -110,5 +120,19 @@ public class Remediation implements Serializable {
                 .filter(Predicate.not(String::isEmpty))
                 .orElse(null);
 
+    }
+
+    @Override
+    public String toString() {
+        return "Remediation{" +
+                "strategy='" + strategy + '\'' +
+                ", countryCode=" + countryCode.getValue() +
+                ", apmCode='" + apmCode + '\'' +
+                ", component='" + component + '\'' +
+                ", version='" + version + '\'' +
+                ", action=" + action.getValue() +
+                ", newVersion='" + newVersion + '\'' +
+                ", deliveryDate=" + deliveryDate +
+                '}';
     }
 }
