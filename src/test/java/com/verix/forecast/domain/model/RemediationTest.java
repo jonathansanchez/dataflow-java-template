@@ -1,6 +1,7 @@
 package com.verix.forecast.domain.model;
 
 import com.verix.forecast.domain.model.exception.InvalidActionTypeException;
+import com.verix.forecast.domain.model.exception.InvalidCountryException;
 import com.verix.forecast.domain.model.exception.InvalidDateException;
 import com.verix.forecast.domain.model.exception.InvalidPropertyException;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ class RemediationTest {
     void Given_a_valid_data_When_try_to_create_Then_create_a_valid_remediation() {
         //Arrange
         String strategy = "SIPFY25";
+        String countryCode = "MX";
         String apmCode = "BDQ4";
         String component = "SQL Server Integration Services";
         String version = "SQL Server Integration Services 2014 Standard 12.0.2456.0";
@@ -25,6 +27,7 @@ class RemediationTest {
 
         //Act
         Remediation remediation = new Remediation(strategy,
+                Country.create(countryCode),
                 apmCode,
                 component,
                 version,
@@ -36,6 +39,10 @@ class RemediationTest {
         assertNotNull(remediation.getStrategy());
         assertNotEquals(EMPTY_STRING, remediation.getStrategy());
         assertEquals(strategy, remediation.getStrategy());
+
+        assertNotNull(remediation.getCountryCode().getValue());
+        assertNotEquals(EMPTY_STRING, remediation.getCountryCode().getValue());
+        assertEquals(countryCode, remediation.getCountryCode().getValue());
 
         assertNotNull(remediation.getApmCode());
         assertNotEquals(EMPTY_STRING, remediation.getApmCode());
@@ -66,6 +73,7 @@ class RemediationTest {
     void Given_a_valid_data_with_empty_new_version_When_try_to_create_Then_create_a_valid_remediation() {
         //Arrange
         String strategy = "SIPFY25";
+        String countryCode = "MX";
         String apmCode = "BDQ4";
         String component = "SQL Server Integration Services";
         String version = "SQL Server Integration Services 2014 Standard 12.0.2456.0";
@@ -75,6 +83,7 @@ class RemediationTest {
 
         //Act
         Remediation remediation = new Remediation(strategy,
+                Country.create(countryCode),
                 apmCode,
                 component,
                 version,
@@ -86,6 +95,10 @@ class RemediationTest {
         assertNotNull(remediation.getStrategy());
         assertNotEquals(EMPTY_STRING, remediation.getStrategy());
         assertEquals(strategy, remediation.getStrategy());
+
+        assertNotNull(remediation.getCountryCode().getValue());
+        assertNotEquals(EMPTY_STRING, remediation.getCountryCode().getValue());
+        assertEquals(countryCode, remediation.getCountryCode().getValue());
 
         assertNotNull(remediation.getApmCode());
         assertNotEquals(EMPTY_STRING, remediation.getApmCode());
@@ -114,6 +127,7 @@ class RemediationTest {
     void Given_a_valid_data_with_null_new_version_When_try_to_create_Then_create_a_valid_remediation() {
         //Arrange
         String strategy = "SIPFY25";
+        String countryCode = "MX";
         String apmCode = "BDQ4";
         String component = "SQL Server Integration Services";
         String version = "SQL Server Integration Services 2014 Standard 12.0.2456.0";
@@ -123,6 +137,7 @@ class RemediationTest {
 
         //Act
         Remediation remediation = new Remediation(strategy,
+                Country.create(countryCode),
                 apmCode,
                 component,
                 version,
@@ -134,6 +149,10 @@ class RemediationTest {
         assertNotNull(remediation.getStrategy());
         assertNotEquals(EMPTY_STRING, remediation.getStrategy());
         assertEquals(strategy, remediation.getStrategy());
+
+        assertNotNull(remediation.getCountryCode().getValue());
+        assertNotEquals(EMPTY_STRING, remediation.getCountryCode().getValue());
+        assertEquals(countryCode, remediation.getCountryCode().getValue());
 
         assertNotNull(remediation.getApmCode());
         assertNotEquals(EMPTY_STRING, remediation.getApmCode());
@@ -159,9 +178,34 @@ class RemediationTest {
     }
 
     @Test
+    void Given_data_with_invalid_country_When_try_to_create_Then_throw_an_exception() {
+        //Arrange
+        String strategy = "SIPFY25";
+        String countryCode = INVALID_CHAR;
+        String apmCode = "BDQ4";
+        String component = "SQL Server Integration Services";
+        String version = "SQL Server Integration Services 2014 Standard 12.0.2456.0";
+        String action = "update";
+        String newVersion = "SQL Server Integration Services 2022 Standard";
+        String deliveryDate = "2025-10-31";
+
+        //Act and Assert
+        assertThrows(InvalidCountryException.class, () -> new Remediation(strategy,
+                Country.create(countryCode),
+                apmCode,
+                component,
+                version,
+                Action.create(action),
+                newVersion,
+                DeliveryDate.create(deliveryDate))
+        );
+    }
+
+    @Test
     void Given_data_with_invalid_action_value_When_try_to_create_Then_throw_an_exception() {
         //Arrange
         String strategy = "SIPFY25";
+        String countryCode = "MX";
         String apmCode = "BDQ4";
         String component = "SQL Server Integration Services";
         String version = "SQL Server Integration Services 2014 Standard 12.0.2456.0";
@@ -171,6 +215,7 @@ class RemediationTest {
 
         //Act and Assert
         assertThrows(InvalidActionTypeException.class, () -> new Remediation(strategy,
+                Country.create(countryCode),
                 apmCode,
                 component,
                 version,
@@ -184,6 +229,7 @@ class RemediationTest {
     void Given_data_with_invalid_date_value_When_try_to_create_Then_throw_an_exception() {
         //Arrange
         String strategy = "SIPFY25";
+        String countryCode = "MX";
         String apmCode = "BDQ4";
         String component = "SQL Server Integration Services";
         String version = "SQL Server Integration Services 2014 Standard 12.0.2456.0";
@@ -193,6 +239,7 @@ class RemediationTest {
 
         //Act and Assert
         assertThrows(InvalidDateException.class, () -> new Remediation(strategy,
+                Country.create(countryCode),
                 apmCode,
                 component,
                 version,
@@ -206,6 +253,7 @@ class RemediationTest {
     void Given_data_with_invalid_values_When_try_to_create_Then_throw_an_exception() {
         //Arrange
         String strategy = INVALID_CHAR;
+        String countryCode = "MX";
         String apmCode = INVALID_CHAR;
         String component = INVALID_CHAR;
         String version = INVALID_CHAR;
@@ -215,6 +263,7 @@ class RemediationTest {
 
         //Act and Assert
         assertThrows(InvalidPropertyException.class, () -> new Remediation(strategy,
+                Country.create(countryCode),
                 apmCode,
                 component,
                 version,
@@ -228,6 +277,7 @@ class RemediationTest {
     void Given_data_with_required_values_When_try_to_create_Then_throw_an_exception() {
         //Arrange
         String strategy = EMPTY_STRING;
+        String countryCode = "MX";
         String apmCode = EMPTY_STRING;
         String component = EMPTY_STRING;
         String version = EMPTY_STRING;
@@ -237,6 +287,7 @@ class RemediationTest {
 
         //Act and Assert
         assertThrows(InvalidPropertyException.class, () -> new Remediation(strategy,
+                Country.create(countryCode),
                 apmCode,
                 component,
                 version,
@@ -250,6 +301,7 @@ class RemediationTest {
     void Given_data_with_required_and_null_values_When_try_to_parse_null_Then_throw_an_exception() {
         //Arrange
         String strategy = null;
+        String countryCode = "MX";
         String apmCode = null;
         String component = null;
         String version = null;
@@ -259,6 +311,7 @@ class RemediationTest {
 
         //Act and Assert
         assertThrows(InvalidPropertyException.class, () -> new Remediation(strategy,
+                Country.create(countryCode),
                 apmCode,
                 component,
                 version,
