@@ -24,6 +24,10 @@ public class RemediationTableSchema {
                                         .setType(STRING.name())
                                         .setMode("REQUIRED"),
                                 new TableFieldSchema()
+                                        .setName("country_code")
+                                        .setType(STRING.name())
+                                        .setMode("REQUIRED"),
+                                new TableFieldSchema()
                                         .setName("apm_code")
                                         .setType(STRING.name())
                                         .setMode("REQUIRED"),
